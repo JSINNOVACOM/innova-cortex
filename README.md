@@ -25,7 +25,7 @@ O Innova Cortex é instalado **por projeto** usando o **modelo `.cortex/`**: a g
 ### 1. Clone o Innova Cortex em um local temporário
 
 ```bash
-git clone https://github.com/JSINNOVACOM/innova-cortex /tmp/cortex
+git clone https://github.com/<seu-usuario>/innova-cortex /tmp/cortex
 ```
 
 ### 2. Vá até o seu projeto
