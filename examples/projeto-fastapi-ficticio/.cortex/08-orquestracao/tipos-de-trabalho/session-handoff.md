@@ -13,6 +13,7 @@ Relacionado a:
 - [handoff-entre-agentes](../handoffs/handoff-entre-agentes.md)
 - [template-handoff](../../04-templates/template-handoff.md)
 - [template-current-status](../../04-templates/template-current-status.md)
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md)
 - [criterios-base](../criterios-de-entrada-e-saida/criterios-base.md)
 
 ---
@@ -92,11 +93,14 @@ O agente que conduziu o trabalho final da sessão é o mais indicado para inicia
 
 ## Skills mais prováveis no fluxo
 
-Este fluxo não depende de skills específicas.  
-Usa diretamente os templates:
+Este fluxo usa diretamente os templates:
 
 - [template-handoff](../../04-templates/template-handoff.md)
 - [template-current-status](../../04-templates/template-current-status.md)
+
+E uma skill na etapa de fechamento:
+
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md)
 
 ---
 
@@ -182,6 +186,22 @@ Pendências não devem viver em arquivos paralelos. O `current-status.md` é a f
 
 ---
 
+### Etapa 6: validação de fechamento
+
+Objetivo:  
+garantir que o material atualizado nesta sessão (`current-status.md`, `handoff.md`) não contém pendências silenciosas que poluam a retomada.
+
+Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os dois arquivos. A skill verifica:
+
+- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- referências a arquivos que não existem (caso típico em handoff: linkar arquivo que ainda não foi criado);
+- EOF/newline final;
+- seções vazias com cabeçalho.
+
+Achados devem ser corrigidos antes do encerramento ou registrados como pendência explícita no próprio `current-status.md`.
+
+---
+
 ## Saída mínima aceitável
 
 Este fluxo só deve ser considerado minimamente concluído quando existir:
@@ -190,6 +210,7 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - registro do que está em aberto
 - `docs/context/current-status.md` atualizado
 - `docs/context/handoff.md` atualizado com próximo passo claro
+- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
 
 Sem isso, a sessão foi encerrada com contexto parcial ou perdido.
 

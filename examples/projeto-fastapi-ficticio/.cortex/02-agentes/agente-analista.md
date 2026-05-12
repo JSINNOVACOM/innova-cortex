@@ -9,6 +9,7 @@ Relacionado a:
 - [01-limites-de-atuacao](../01-regras/01-limites-de-atuacao.md)
 - [03-checklist-de-qualidade](../01-regras/03-checklist-de-qualidade.md)
 - [skill-revisar-documento](../03-skills/skill-revisar-documento.md)
+- [skill-validar-encerramento](../03-skills/skill-validar-encerramento.md)
 
 ---
 

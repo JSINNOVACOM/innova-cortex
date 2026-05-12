@@ -17,6 +17,25 @@ Relacionado a:
 
 ---
 
+## Convenção de placeholders
+
+Quando um template precisa de um valor a ser substituído pelo adopter, o placeholder deve aparecer no formato:
+
+```markdown
+{{NOME_DO_PLACEHOLDER}} <!-- TODO: descrição do que substituir -->
+```
+
+O par `{{...}}` + `<!-- TODO: ... -->` cumpre três funções:
+- visibilidade ao operador (TODO aparece em qualquer renderizador);
+- pesquisabilidade por regex (`{{[A-Z_]+}}` ou `<!-- TODO`);
+- documentação inline do que substituir.
+
+A skill [skill-validar-encerramento](../03-skills/skill-validar-encerramento.md) roda ao final dos workflows que produzem docs e detecta placeholders pendentes nesse formato. Templates novos devem seguir essa convenção.
+
+Campos de **metadados** em branco (ex: `- **Projeto:**` no início dos templates) não são placeholders no sentido estrito — são campos de valor a preencher. Não precisam de marcação `{{...}}` nem de `<!-- TODO -->`, mas o adopter deve completá-los.
+
+---
+
 ## Princípio central
 Os templates existem para evitar improviso estrutural.
 

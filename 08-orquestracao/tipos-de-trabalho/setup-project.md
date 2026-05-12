@@ -14,6 +14,7 @@ Relacionado a:
 - [agente-arquiteto](../../02-agentes/agente-arquiteto.md)
 - [agente-planejador](../../02-agentes/agente-planejador.md)
 - [skill-mapear-contexto](../../03-skills/skill-mapear-contexto.md)
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md)
 - [novo-projeto](novo-projeto.md)
 - [criterios-base](../criterios-de-entrada-e-saida/criterios-base.md)
 
@@ -106,6 +107,7 @@ A ordem mais comum é:
 As skills mais comuns para este tipo de trabalho são:
 
 - [skill-mapear-contexto](../../03-skills/skill-mapear-contexto.md)
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) (etapa de fechamento)
 
 ---
 
@@ -203,6 +205,22 @@ Deve produzir:
 
 ---
 
+### Etapa 7: validação de fechamento
+
+Objetivo:  
+garantir que o material produzido neste fluxo não contém pendências silenciosas.
+
+Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados durante o setup (configurações, docs atualizados, scripts). A skill verifica:
+
+- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- referências a arquivos que não existem;
+- EOF/newline final;
+- seções vazias com cabeçalho.
+
+Apresentar o relatório ao usuário e decidir, por achado, entre corrigir agora ou registrar como pendência em `docs/context/current-status.md`. O fluxo só pode ser declarado concluído após esta etapa.
+
+---
+
 ## Saída mínima aceitável
 
 Este fluxo só deve ser considerado minimamente concluído quando existir:
@@ -216,6 +234,7 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - `.gitignore` adequado à estrutura do projeto
 - validação mínima de execução concluída
 - status e handoff atualizados com o estado técnico alcançado
+- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
 
 Sem isso, o projeto ainda não está pronto para receber desenvolvimento com segurança.
 

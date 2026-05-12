@@ -16,6 +16,7 @@ Relacionado a:
 - [agente-planejador](../../02-agentes/agente-planejador.md)
 - [skill-mapear-contexto](../../03-skills/skill-mapear-contexto.md)
 - [skill-revisar-documento](../../03-skills/skill-revisar-documento.md)
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md)
 - memoria-operacional (registro interno, não publicado no OSS)
 - pendencias (registro interno, não publicado no OSS)
 - [criterios-base](../criterios-de-entrada-e-saida/criterios-base.md)
@@ -99,6 +100,7 @@ As skills mais comuns para este tipo de trabalho são:
 
 - [skill-mapear-contexto](../../03-skills/skill-mapear-contexto.md)
 - [skill-revisar-documento](../../03-skills/skill-revisar-documento.md)
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) (etapa de fechamento)
 
 ---
 
@@ -210,6 +212,28 @@ Deve atualizar no projeto:
 
 ---
 
+### Etapa 8: validação de fechamento
+
+Objetivo:  
+garantir que a documentação produzida nesta feature não contém pendências silenciosas — em particular, referências a arquivos que o workflow citou mas não criou.
+
+Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados na feature (`docs/features/<feature>.md`, `memory/learnings*.md`, `docs/context/current-status.md`, `docs/context/handoff.md`). A skill verifica:
+
+- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- referências a arquivos que não existem (caso típico desta etapa);
+- EOF/newline final;
+- seções vazias com cabeçalho.
+
+Para cada referência pendurada, decidir entre:
+
+- criar o arquivo agora (se a referência prometia conteúdo, ex: `memory/learnings_<feature>.md`);
+- remover a referência;
+- substituir por outra fonte que exista.
+
+A feature só pode ser declarada concluída após esta etapa.
+
+---
+
 ## Saída mínima aceitável
 
 Este fluxo só deve ser considerado minimamente concluído quando existir:
@@ -219,6 +243,7 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - resultado de build, lint e testes registrado, quando aplicável à stack
 - status e handoff atualizados
 - o que ficou fora do escopo registrado
+- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
 
 Sem isso, a feature pode estar funcionando mas o projeto está mais difícil de continuar.
 

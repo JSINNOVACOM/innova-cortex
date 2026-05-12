@@ -11,6 +11,7 @@ Relacionado a:
 - [01-limites-de-atuacao](../../01-regras/01-limites-de-atuacao.md)
 - [agente-analista](../../02-agentes/agente-analista.md)
 - [skill-revisar-documento](../../03-skills/skill-revisar-documento.md)
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md)
 - [criterios-base](../criterios-de-entrada-e-saida/criterios-base.md)
 
 ---
@@ -106,6 +107,10 @@ O [agente-analista](../../02-agentes/agente-analista.md) é mais indicado porque
 A skill mais comum para este tipo de trabalho é:
 
 - [skill-revisar-documento](../../03-skills/skill-revisar-documento.md)
+
+E uma skill na etapa de fechamento:
+
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md)
 
 ---
 
@@ -218,6 +223,22 @@ Se não houver base suficiente para recomendação, registrar apenas o incidente
 
 ---
 
+### Etapa 7: validação de fechamento
+
+Objetivo:  
+garantir que o registro do aprendizado em `memory/learnings.md` e as referências eventuais em `docs/` não contêm pendências silenciosas.
+
+Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos editados pelo fluxo (`memory/learnings.md` e qualquer `docs/*` referenciado). A skill verifica:
+
+- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- referências a arquivos que não existem;
+- EOF/newline final;
+- seções vazias com cabeçalho.
+
+Caso o aprendizado referencie um arquivo que não foi criado (ex: linkar uma análise futura), decidir entre criar agora, remover a referência ou substituir.
+
+---
+
 ## Saída mínima aceitável
 
 Este fluxo só deve ser considerado minimamente concluído quando existir:
@@ -228,6 +249,7 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - decisão de registro (registrar ou não, e em qual seção)
 - registro em `memory/learnings.md`, quando aplicável
 - recomendação preventiva, quando houver base para isso
+- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
 
 Sem isso, o incidente foi percebido mas não processado.
 

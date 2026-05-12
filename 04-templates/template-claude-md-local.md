@@ -1,10 +1,10 @@
-# CLAUDE.md — {{PROJECT_NAME}}
+# CLAUDE.md — {{PROJECT_NAME}} <!-- TODO: substituir pelo nome do projeto -->
 
 ## Projeto
 
-Nome: {{PROJECT_NAME}}
+Nome: {{PROJECT_NAME}} <!-- TODO: substituir pelo nome do projeto -->
 
-Objetivo: {{PROJECT_OBJECTIVE}}
+Objetivo: {{PROJECT_OBJECTIVE}} <!-- TODO: descrever em 1-2 linhas o objetivo do projeto -->
 
 ---
 

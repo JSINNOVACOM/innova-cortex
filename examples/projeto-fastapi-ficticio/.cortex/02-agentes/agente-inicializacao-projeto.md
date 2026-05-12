@@ -13,6 +13,7 @@ Relacionado a:
 - [04-estrutura-documental-de-projetos](../01-regras/04-estrutura-documental-de-projetos.md)
 - [skill-iniciar-projeto](../03-skills/skill-iniciar-projeto.md)
 - [skill-mapear-contexto](../03-skills/skill-mapear-contexto.md)
+- [skill-validar-encerramento](../03-skills/skill-validar-encerramento.md)
 - [templates-readme](../04-templates/templates-readme.md)
 
 ---
@@ -196,6 +197,13 @@ Depois da inicialização, o fluxo normalmente tende a seguir para:
 - [agente-analista](agente-analista.md), quando ainda falta leitura crítica
 - [agente-arquiteto](agente-arquiteto.md), quando já existe base para estruturar
 - [agente-planejador](agente-planejador.md), quando já existe base para sequenciar execução
+
+### 7. Validar encerramento antes de declarar concluído
+Antes de declarar o fluxo de inicialização concluído, aplicar [skill-validar-encerramento](../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados (`CLAUDE.md`, `docs/`, `memory/`). A skill verifica placeholders pendentes, referências a arquivos que não existem, EOF/newline e seções vazias.
+
+Achados devem ser apresentados ao usuário. Para cada um, decidir entre corrigir agora ou registrar como pendência em `docs/context/current-status.md`.
+
+Esta etapa cobre a fricção típica de Init Project em que placeholders de template (ex: `{{PROJECT_NAME}}`) ficam silenciosamente no projeto do adopter por descuido.
 
 ---
 

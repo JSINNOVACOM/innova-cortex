@@ -14,6 +14,7 @@ Relacionado a:
 - [agente-planejador](../../02-agentes/agente-planejador.md)
 - [skill-mapear-contexto](../../03-skills/skill-mapear-contexto.md)
 - [skill-revisar-documento](../../03-skills/skill-revisar-documento.md)
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md)
 - memoria-operacional (registro interno, não publicado no OSS)
 - pendencias (registro interno, não publicado no OSS)
 - [roteamento-basico](../roteamento/roteamento-basico.md)
@@ -95,6 +96,7 @@ A ordem mais comum é:
 As skills mais comuns para este tipo de trabalho são:
 - [skill-mapear-contexto](../../03-skills/skill-mapear-contexto.md)
 - [skill-revisar-documento](../../03-skills/skill-revisar-documento.md)
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) (etapa de fechamento)
 
 ---
 
@@ -203,6 +205,22 @@ Deve atualizar, quando aplicável:
 
 ---
 
+### Etapa 8: validação de fechamento
+
+Objetivo:
+garantir que a documentação atualizada pela refatoração não contém pendências silenciosas.
+
+Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados (`docs/analysis/*`, `docs/context/current-status.md`, `docs/context/handoff.md`). A skill verifica:
+
+- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- referências a arquivos que não existem;
+- EOF/newline final;
+- seções vazias com cabeçalho.
+
+Achados devem ser corrigidos ou registrados como pendência explícita em `docs/context/current-status.md` antes do encerramento.
+
+---
+
 ## Saída mínima aceitável
 Este fluxo só deve ser considerado minimamente concluído quando existir:
 - entendimento suficiente do estado atual
@@ -212,6 +230,7 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - plano mínimo de execução ou sequência de mudança
 - critério mínimo de validação
 - clareza sobre o que foi melhorado ou o que ainda falta
+- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
 
 Sem isso, ainda há grande chance de a refatoração ter sido apenas movimentação de código sem direção clara.
 

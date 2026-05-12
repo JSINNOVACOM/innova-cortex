@@ -15,6 +15,7 @@ Relacionado a:
 - [agente-arquiteto](../../02-agentes/agente-arquiteto.md)
 - [agente-planejador](../../02-agentes/agente-planejador.md)
 - [skill-revisar-documento](../../03-skills/skill-revisar-documento.md)
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md)
 - [criterios-base](../criterios-de-entrada-e-saida/criterios-base.md)
 - [handoff-entre-agentes](../handoffs/handoff-entre-agentes.md)
 - memoria-operacional (registro interno, não publicado no OSS)
@@ -113,6 +114,10 @@ A skill mais comum para este tipo de trabalho é:
 
 - [skill-revisar-documento](../../03-skills/skill-revisar-documento.md)
 
+E uma skill na etapa de fechamento:
+
+- [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md)
+
 ---
 
 ## Fluxo recomendado
@@ -189,6 +194,22 @@ Se o projeto tiver `docs/context/`, o resultado deve ser referenciado ou registr
 
 ---
 
+### Etapa 6: validação de fechamento
+
+Objetivo:  
+garantir que o relatório de revisão produzido não contém pendências silenciosas.
+
+Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados pela revisão (relatório de revisão, `docs/context/current-status.md`, `docs/context/handoff.md` quando atualizados). A skill verifica:
+
+- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- referências a arquivos que não existem;
+- EOF/newline final;
+- seções vazias com cabeçalho.
+
+Achados devem ser corrigidos ou registrados como pendência antes do encerramento da revisão.
+
+---
+
 ## Saída mínima aceitável
 
 Este fluxo só deve ser considerado minimamente concluído quando existir:
@@ -199,6 +220,7 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - falhas classificadas nas categorias corretas
 - recomendações produzidas por categoria
 - resultado registrado de forma rastreável
+- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
 
 Sem isso, a revisão foi apenas uma leitura sem saída operacional.
 
