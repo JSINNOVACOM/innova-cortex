@@ -6,7 +6,7 @@ Innova Cortex é um harness leve que transforma o Claude (e assistentes de códi
 
 **Não é** uma biblioteca de prompts, nem um gerador de scaffold, nem um framework de agentes. É a camada de disciplina operacional que fica entre você e o assistente.
 
-> **Status:** v0.1 (early). Alguns workflows são validados em pilotos; outros são experimentais. Veja [Workflows](#workflows) abaixo para o status de cada um.
+> **Status:** v0.2.0. O harness é utilizável hoje; alguns workflows são validados em pilotos, outros são experimentais. Veja [Workflows](#workflows) abaixo para o status de cada um.
 
 ---
 
@@ -39,7 +39,10 @@ cd ~/projetos/meu-projeto
 ```bash
 mkdir -p .cortex
 cp -r /tmp/cortex/* .cortex/
+rm -rf .cortex/examples   # exemplo didático: referência no repo, não precisa no projeto
 ```
+
+O `examples/` existe no repositório apenas como referência de layout — removê-lo do `.cortex/` instalado mantém a governança enxuta. (O CLI planejado fará isso automaticamente.)
 
 ### 4. Crie o `CLAUDE.md` local a partir do template
 
@@ -149,7 +152,7 @@ Os workflows sem piloto entram porque a disciplina que eles codificam ainda é �
 - `08-orquestracao/` — definições de workflows, roteamento, handoffs, critérios de entrada/saída
 - `10-padroes-tecnicos/` — padrões técnicos opinativos (stacks, componentes, arquitetura, quality gates)
 
-> **Nota sobre `10-padroes-tecnicos/`:** os padrões técnicos são mínimos na v0.1 (Java/Spring, React/TypeScript, mais páginas genéricas de componente e arquitetura). A cobertura vai crescer em versões futuras, **dirigida por você**, não extraída automaticamente de projetos arbitrários. Se uma stack faltar, use as páginas existentes como forma e defina a sua.
+> **Nota sobre `10-padroes-tecnicos/`:** os padrões técnicos ainda são mínimos nesta fase (Java/Spring, React/TypeScript, mais páginas genéricas de componente e arquitetura). A cobertura vai crescer em versões futuras, **dirigida por você**, não extraída automaticamente de projetos arbitrários. Se uma stack faltar, use as páginas existentes como forma e defina a sua.
 
 ---
 
@@ -164,14 +167,16 @@ Os workflows sem piloto entram porque a disciplina que eles codificam ainda é �
 
 ## Roadmap
 
-| Versão | Foco | Janela |
+| Versão | Foco | Status |
 |---|---|---|
-| v0.1 | Esta release: governança, agentes, workflows, templates publicados | Agora |
-| v0.1.1 | Segundo projeto-exemplo (Next.js) | Semanas 6-12 |
-| v0.2 | CLI `innova-cortex`: `npx innova-cortex init` substitui o quickstart manual | Semanas 6-12 |
-| v0.3+ | Mais padrões técnicos, workflows validados, padrões opinativos | A definir |
+| v0.1 | Governança, agentes, workflows e templates publicados | Publicado |
+| v0.1.1 | Skill `skill-validar-encerramento` + validação de encerramento (Decisões 03/04) | Publicado |
+| v0.2.0 | Cortex Spec Flow (4 modos) + skill de encerramento obrigatória + agentes proativos | Publicado |
+| Próximo exemplo | Segundo projeto-exemplo (Next.js) | Planejado |
+| CLI `innova-cortex` | `npx innova-cortex init` automatiza os passos 1-5 do Quickstart | Planejado |
+| Futuro | Mais padrões técnicos, workflows validados, padrões opinativos | A definir |
 
-O CLI (`v0.2`) vai automatizar os passos 1-5 do Quickstart. Até lá, o fluxo manual acima é o caminho suportado.
+Enquanto o CLI não chega, o fluxo manual do Quickstart acima é o caminho suportado.
 
 ---
 
@@ -179,7 +184,7 @@ O CLI (`v0.2`) vai automatizar os passos 1-5 do Quickstart. Até lá, o fluxo ma
 
 Há um pequeno projeto de referência em `examples/projeto-fastapi-ficticio/` (FastAPI). É um **projeto fictício didático** — leia para ver como fica uma instalação completa do Innova Cortex de ponta a ponta. **Não copie como scaffold.** Rode o Quickstart no seu próprio projeto e consulte o exemplo apenas como referência de layout.
 
-Um segundo exemplo (Next.js) está planejado para a v0.1.1.
+Um segundo exemplo (Next.js) está planejado.
 
 ---
 
