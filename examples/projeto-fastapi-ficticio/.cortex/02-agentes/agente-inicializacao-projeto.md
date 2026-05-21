@@ -198,12 +198,51 @@ Depois da inicialização, o fluxo normalmente tende a seguir para:
 - [agente-arquiteto](agente-arquiteto.md), quando já existe base para estruturar
 - [agente-planejador](agente-planejador.md), quando já existe base para sequenciar execução
 
-### 7. Validar encerramento antes de declarar concluído
-Antes de declarar o fluxo de inicialização concluído, aplicar [skill-validar-encerramento](../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados (`CLAUDE.md`, `docs/`, `memory/`). A skill verifica placeholders pendentes, referências a arquivos que não existem, EOF/newline e seções vazias.
+### 7. Validar encerramento antes de declarar concluído (OBRIGATÓRIA)
+Antes de declarar o fluxo de inicialização concluído, aplicar [skill-validar-encerramento](../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados (`CLAUDE.md`, `docs/`, `memory/`). A skill verifica placeholders pendentes, referências a arquivos que não existem, EOF/newline, seções vazias, `.gitignore` mínimo (Init/Setup) e wikilinks fantasma.
 
 Achados devem ser apresentados ao usuário. Para cada um, decidir entre corrigir agora ou registrar como pendência em `docs/context/current-status.md`.
 
 Esta etapa cobre a fricção típica de Init Project em que placeholders de template (ex: `{{PROJECT_NAME}}`) ficam silenciosamente no projeto do adopter por descuido.
+
+---
+
+## Regra de encerramento (obrigatória)
+
+Antes de declarar QUALQUER workflow concluído, verificar:
+
+1. A `skill-validar-encerramento` foi invocada nesta sessão?
+2. O relatório foi mostrado ao adopter (mesmo se zero problemas)?
+3. Se houver pendências (placeholders, refs penduradas, `.gitignore` faltante, wikilinks fantasma), foram resolvidas OU registradas como pendência aceita em `docs/context/current-status.md`?
+
+Se qualquer resposta for NÃO, **NÃO declare o workflow concluído**. Execute a skill primeiro.
+
+Falha em seguir esta regra é considerada **quebra de protocolo do harness** — equivalente a executar sem mostrar plano. Não há atalho. Não há override em modo padrão.
+
+Ver `Claude.md` central, seção "Skills obrigatórias por workflow", para a lista completa de workflows cobertos.
+
+---
+
+## Comportamento proativo (sugestão de workflows)
+
+Ao final de cada turno relevante, **invocar [skill-detectar-workflow-relevante](../03-skills/skill-detectar-workflow-relevante.md)** para avaliar se algum workflow do Cortex seria útil agora — mesmo que o adopter não tenha pedido explicitamente.
+
+A skill retorna:
+- **silêncio**: nada a sugerir; seguir normalmente.
+- **sugestão**: pergunta no fim do turno com formato `[s] Sim / [n] Não / [m] Mostrar critério`.
+
+**Regras:**
+1. Sugestão é sempre **pergunta — nunca ação automática**. Adopter decide.
+2. Frequência: a cada **3-5 turnos relevantes** (não a cada turno).
+3. Cooldown: workflow recusado não é sugerido de novo por 5 turnos relevantes.
+4. Adopter pode silenciar todas as sugestões com flag `--no-suggest` (ativa pela sessão atual; reativa com `--suggest` ou nova sessão).
+5. Registrar cada sugestão em `06-logs-e-memoria/sugestoes-proativas.log` (telemetria leve).
+
+**Workflows que este agente é mais provável de sugerir:** [novo-projeto](../08-orquestracao/tipos-de-trabalho/novo-projeto.md) (Init Project), [setup-project](../08-orquestracao/tipos-de-trabalho/setup-project.md), e [session-handoff](../08-orquestracao/tipos-de-trabalho/session-handoff.md) (especialmente quando adopter sinaliza fim de sessão sem ter acionado Handoff explicitamente).
+
+Falha em ser proativo quando o contexto pede é considerada UX ruim do harness — workflows existem para serem usados, não decorados.
+
+Ver `Claude.md` central, seção "Comportamento proativo do agente", para o panorama completo.
 
 ---
 

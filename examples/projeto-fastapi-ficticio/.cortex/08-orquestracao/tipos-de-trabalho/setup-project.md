@@ -205,19 +205,23 @@ Deve produzir:
 
 ---
 
-### Etapa 7: validação de fechamento
+### Etapa 7: validação de fechamento (OBRIGATÓRIA)
+
+**Status:** hard-required. Workflow NÃO pode ser declarado concluído sem este passo.
 
 Objetivo:  
 garantir que o material produzido neste fluxo não contém pendências silenciosas.
 
 Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados durante o setup (configurações, docs atualizados, scripts). A skill verifica:
 
-- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
-- referências a arquivos que não existem;
-- EOF/newline final;
-- seções vazias com cabeçalho.
+- **Check 1:** placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- **Check 2:** referências a arquivos que não existem;
+- **Check 3:** EOF/newline final;
+- **Check 4:** seções vazias com cabeçalho;
+- **Check 5:** `.gitignore` mínimo (10 entradas da regra P11.1 — também roda em Setup Project, complementando a Etapa 5);
+- **Check 6:** wikilinks fantasma (lista negra em `03-skills/wikilinks-fantasma.txt`).
 
-Apresentar o relatório ao usuário e decidir, por achado, entre corrigir agora ou registrar como pendência em `docs/context/current-status.md`. O fluxo só pode ser declarado concluído após esta etapa.
+Apresentar o relatório ao usuário **mesmo se zero problemas encontrados** (output mínimo obrigatório) e decidir, por achado, entre corrigir agora ou registrar como pendência em `docs/context/current-status.md`. O fluxo só pode ser declarado concluído após esta etapa.
 
 ---
 
@@ -231,10 +235,11 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - lint configurado, quando aplicável, ou justificativa de ausência registrada
 - testes básicos passando, quando aplicável à stack
 - Git verificado, inicializado com aprovação explícita ou exceção registrada
-- `.gitignore` adequado à estrutura do projeto
+- `.gitignore` adequado à estrutura do projeto (Check 5 da skill aplicado)
 - validação mínima de execução concluída
 - status e handoff atualizados com o estado técnico alcançado
-- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
+- validação de fechamento executada (todos os 6 checks da skill)
+- ⚠ Workflow não é considerado concluído sem relatório da skill (mesmo se vazio).
 
 Sem isso, o projeto ainda não está pronto para receber desenvolvimento com segurança.
 

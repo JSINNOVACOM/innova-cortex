@@ -293,6 +293,10 @@ Se algum documento específico precisar ser versionado, isso deve ser decisão e
 
 Outros itens devem ser adicionados conforme stack, build, cache, ambiente local e dependências.
 
+### Aplicação automática via skill
+
+A skill [skill-validar-encerramento](../03-skills/skill-validar-encerramento.md) (Check 5) aplica esta regra automaticamente no fechamento de Init Project e Setup Project: verifica se o `.gitignore` do projeto contém as 10 entradas mínimas listadas acima e oferece anexar as faltantes de forma idempotente. Detalhes em `03-skills/skill-validar-encerramento.md` e na Decisão 08 (`11-evolucao-do-sistema/02-decisoes/skill-cobre-gitignore-minimo.md`).
+
 ---
 
 ## Critérios para expandir a pasta `docs/`

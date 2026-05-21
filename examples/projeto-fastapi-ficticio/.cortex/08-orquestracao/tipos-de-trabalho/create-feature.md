@@ -212,17 +212,22 @@ Deve atualizar no projeto:
 
 ---
 
-### Etapa 8: validação de fechamento
+### Etapa 8: validação de fechamento (OBRIGATÓRIA)
+
+**Status:** hard-required. Workflow NÃO pode ser declarado concluído sem este passo.
 
 Objetivo:  
 garantir que a documentação produzida nesta feature não contém pendências silenciosas — em particular, referências a arquivos que o workflow citou mas não criou.
 
 Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados na feature (`docs/features/<feature>.md`, `memory/learnings*.md`, `docs/context/current-status.md`, `docs/context/handoff.md`). A skill verifica:
 
-- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
-- referências a arquivos que não existem (caso típico desta etapa);
-- EOF/newline final;
-- seções vazias com cabeçalho.
+- **Check 1:** placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- **Check 2:** referências a arquivos que não existem (caso típico desta etapa);
+- **Check 3:** EOF/newline final;
+- **Check 4:** seções vazias com cabeçalho;
+- **Check 6:** wikilinks fantasma (lista negra em `03-skills/wikilinks-fantasma.txt`).
+
+(Check 5 — `.gitignore` mínimo — roda apenas em Init Project e Setup Project, não nesta etapa.)
 
 Para cada referência pendurada, decidir entre:
 
@@ -230,7 +235,7 @@ Para cada referência pendurada, decidir entre:
 - remover a referência;
 - substituir por outra fonte que exista.
 
-A feature só pode ser declarada concluída após esta etapa.
+O relatório consolidado deve ser apresentado ao usuário **mesmo se zero problemas encontrados** (output mínimo obrigatório). A feature só pode ser declarada concluída após esta etapa.
 
 ---
 
@@ -243,7 +248,8 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - resultado de build, lint e testes registrado, quando aplicável à stack
 - status e handoff atualizados
 - o que ficou fora do escopo registrado
-- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
+- validação de fechamento executada (Checks 1, 2, 3, 4, 6 da skill)
+- ⚠ Workflow não é considerado concluído sem relatório da skill (mesmo se vazio).
 
 Sem isso, a feature pode estar funcionando mas o projeto está mais difícil de continuar.
 

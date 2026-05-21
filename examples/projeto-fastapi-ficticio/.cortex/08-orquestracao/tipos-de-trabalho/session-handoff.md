@@ -186,19 +186,24 @@ Pendências não devem viver em arquivos paralelos. O `current-status.md` é a f
 
 ---
 
-### Etapa 6: validação de fechamento
+### Etapa 6: validação de fechamento (OBRIGATÓRIA)
+
+**Status:** hard-required. Workflow NÃO pode ser declarado concluído sem este passo.
 
 Objetivo:  
 garantir que o material atualizado nesta sessão (`current-status.md`, `handoff.md`) não contém pendências silenciosas que poluam a retomada.
 
 Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os dois arquivos. A skill verifica:
 
-- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
-- referências a arquivos que não existem (caso típico em handoff: linkar arquivo que ainda não foi criado);
-- EOF/newline final;
-- seções vazias com cabeçalho.
+- **Check 1:** placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- **Check 2:** referências a arquivos que não existem (caso típico em handoff: linkar arquivo que ainda não foi criado);
+- **Check 3:** EOF/newline final;
+- **Check 4:** seções vazias com cabeçalho;
+- **Check 6:** wikilinks fantasma (lista negra em `03-skills/wikilinks-fantasma.txt`).
 
-Achados devem ser corrigidos antes do encerramento ou registrados como pendência explícita no próprio `current-status.md`.
+(Check 5 — `.gitignore` mínimo — roda apenas em Init Project e Setup Project, não nesta etapa.)
+
+O relatório consolidado deve ser apresentado ao usuário **mesmo se zero problemas encontrados** (output mínimo obrigatório). Achados devem ser corrigidos antes do encerramento ou registrados como pendência explícita no próprio `current-status.md`.
 
 ---
 
@@ -210,7 +215,8 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - registro do que está em aberto
 - `docs/context/current-status.md` atualizado
 - `docs/context/handoff.md` atualizado com próximo passo claro
-- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
+- validação de fechamento executada (Checks 1, 2, 3, 4, 6 da skill)
+- ⚠ Workflow não é considerado concluído sem relatório da skill (mesmo se vazio).
 
 Sem isso, a sessão foi encerrada com contexto parcial ou perdido.
 

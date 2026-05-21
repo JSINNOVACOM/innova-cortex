@@ -194,19 +194,24 @@ Se o projeto tiver `docs/context/`, o resultado deve ser referenciado ou registr
 
 ---
 
-### Etapa 6: validação de fechamento
+### Etapa 6: validação de fechamento (OBRIGATÓRIA)
+
+**Status:** hard-required. Workflow NÃO pode ser declarado concluído sem este passo.
 
 Objetivo:  
 garantir que o relatório de revisão produzido não contém pendências silenciosas.
 
 Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados pela revisão (relatório de revisão, `docs/context/current-status.md`, `docs/context/handoff.md` quando atualizados). A skill verifica:
 
-- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
-- referências a arquivos que não existem;
-- EOF/newline final;
-- seções vazias com cabeçalho.
+- **Check 1:** placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- **Check 2:** referências a arquivos que não existem;
+- **Check 3:** EOF/newline final;
+- **Check 4:** seções vazias com cabeçalho;
+- **Check 6:** wikilinks fantasma (lista negra em `03-skills/wikilinks-fantasma.txt`).
 
-Achados devem ser corrigidos ou registrados como pendência antes do encerramento da revisão.
+(Check 5 — `.gitignore` mínimo — roda apenas em Init Project e Setup Project, não nesta etapa.)
+
+O relatório consolidado deve ser apresentado ao usuário **mesmo se zero problemas encontrados** (output mínimo obrigatório). Achados devem ser corrigidos ou registrados como pendência antes do encerramento da revisão.
 
 ---
 
@@ -220,7 +225,8 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - falhas classificadas nas categorias corretas
 - recomendações produzidas por categoria
 - resultado registrado de forma rastreável
-- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
+- validação de fechamento executada (Checks 1, 2, 3, 4, 6 da skill)
+- ⚠ Workflow não é considerado concluído sem relatório da skill (mesmo se vazio).
 
 Sem isso, a revisão foi apenas uma leitura sem saída operacional.
 

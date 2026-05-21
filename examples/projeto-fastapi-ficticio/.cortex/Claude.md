@@ -103,6 +103,9 @@ O agente não deve apenas gerar arquivos. Deve ajudar a transformar informação
 - [Skill: Iniciar projeto](03-skills/skill-iniciar-projeto.md)
 - [Skill: Mapear contexto](03-skills/skill-mapear-contexto.md)
 - [Skill: Revisar documento](03-skills/skill-revisar-documento.md)
+- [Skill: Validar encerramento](03-skills/skill-validar-encerramento.md)
+- [Skill: Detectar workflow relevante](03-skills/skill-detectar-workflow-relevante.md)
+- [Skill: Cortex Spec Flow](03-skills/skill-cortex-spec-flow.md)
 
 ### Tipos de trabalho
 - [Init Project](08-orquestracao/tipos-de-trabalho/novo-projeto.md)
@@ -112,6 +115,7 @@ O agente não deve apenas gerar arquivos. Deve ajudar a transformar informação
 - [Review](08-orquestracao/tipos-de-trabalho/review.md)
 - [Handoff](08-orquestracao/tipos-de-trabalho/session-handoff.md)
 - [Learn Simple](08-orquestracao/tipos-de-trabalho/learn-simple.md)
+- [Cortex Spec Flow](08-orquestracao/tipos-de-trabalho/cortex-spec-flow.md) (opcional — 4 modos: Exploração / Guiado / Conduzido / Governado)
 
 ### Registros do projeto
 
@@ -191,6 +195,9 @@ Ao ser acionado um fluxo, o sistema deve declarar:
 | Review | [review](08-orquestracao/tipos-de-trabalho/review.md) |
 | Handoff | [session-handoff](08-orquestracao/tipos-de-trabalho/session-handoff.md) |
 | Learn Simple | [learn-simple](08-orquestracao/tipos-de-trabalho/learn-simple.md) |
+| Cortex Spec Flow | [cortex-spec-flow](08-orquestracao/tipos-de-trabalho/cortex-spec-flow.md) |
+
+**Cortex Spec Flow é opcional** — irmão dos 7 workflows existentes, dedicado a trabalho de spec/produto/análise. Tem 4 modos internos declarados pelo adopter no acionamento (Exploração / Guiado / Conduzido / Governado). Sem acionamento, Cortex se comporta exatamente como antes.
 
 ### Protocolo obrigatório
 
@@ -230,6 +237,95 @@ Quando o ambiente suportar menus interativos, formulários ou seleções, o sist
 Quando menu visual não estiver disponível, o sistema deve informar a limitação e conduzir as mesmas perguntas em formato textual guiado equivalente.
 
 O modo guiado só pode ser dispensado quando o usuário tiver dado autorização explícita para execução direta.
+
+---
+
+## Skills obrigatórias por workflow
+
+As skills listadas como **obrigatórias** em cada workflow devem ser executadas antes de declarar o workflow concluído. Não há atalho. Pular skill obrigatória é considerado **quebra de protocolo equivalente a executar sem mostrar plano**.
+
+| Workflow | Skill obrigatória |
+|---|---|
+| Init Project ([novo-projeto](08-orquestracao/tipos-de-trabalho/novo-projeto.md)) | [skill-validar-encerramento](03-skills/skill-validar-encerramento.md) |
+| Setup Project ([setup-project](08-orquestracao/tipos-de-trabalho/setup-project.md)) | [skill-validar-encerramento](03-skills/skill-validar-encerramento.md) |
+| Create Feature ([create-feature](08-orquestracao/tipos-de-trabalho/create-feature.md)) | [skill-validar-encerramento](03-skills/skill-validar-encerramento.md) |
+| Refactor Project ([refatoracao](08-orquestracao/tipos-de-trabalho/refatoracao.md)) | [skill-validar-encerramento](03-skills/skill-validar-encerramento.md) |
+| Review ([review](08-orquestracao/tipos-de-trabalho/review.md)) | [skill-validar-encerramento](03-skills/skill-validar-encerramento.md) |
+| Handoff ([session-handoff](08-orquestracao/tipos-de-trabalho/session-handoff.md)) | [skill-validar-encerramento](03-skills/skill-validar-encerramento.md) |
+| Learn Simple ([learn-simple](08-orquestracao/tipos-de-trabalho/learn-simple.md)) | [skill-validar-encerramento](03-skills/skill-validar-encerramento.md) |
+| Cortex Spec Flow ([cortex-spec-flow](08-orquestracao/tipos-de-trabalho/cortex-spec-flow.md)) | [skill-validar-encerramento](03-skills/skill-validar-encerramento.md) (com matriz por modo + Check 7 — destino declarado) |
+
+A skill `skill-validar-encerramento` produz **relatório visual mínimo sempre visível** ao final de cada workflow — mesmo com zero achados. Se o adopter não vê o relatório, o workflow não foi concluído corretamente.
+
+**Exceção parcial — modo Exploração do Cortex Spec Flow:** a skill ainda roda (hard-block sobre execução continua valendo), mas o relatório é silencioso quando todos os checks aplicáveis estão limpos. Preserva a natureza do modo (captura livre, sem ritual de fechamento). Check 7 (destino declarado) é sempre obrigatório, mesmo em Exploração — sem destino, workflow não fecha. Mesmo no relatório silencioso, a confirmação do Check 7 (destino) é sempre exibida — o adopter sempre vê que a skill rodou.
+
+Workflows novos que vierem a ser criados devem declarar explicitamente se a skill é obrigatória neles. O default para qualquer workflow que produz documentação é **sim**.
+
+Esta regra implementa a Decisão 05 (registrada em `11-evolucao-do-sistema/02-decisoes/skill-validar-encerramento-obrigatoria.md`) a partir de evidência do teste-adopter-2: skill implementada estruturalmente mas tratada como opcional não gera efeito real — daí a obrigatoriedade explícita em nível central.
+
+---
+
+## Comportamento proativo do agente
+
+Os 4 agentes do Cortex **monitoram o contexto da sessão** e propõem proativamente a invocação de workflows relevantes que o adopter não pediu explicitamente. A skill [skill-detectar-workflow-relevante](03-skills/skill-detectar-workflow-relevante.md) aplica heurísticas conservadoras (palavras-chave de fix, padrões duplicados, TODOs acumulados, fim de sessão sem handoff) e retorna sugestões.
+
+### O que esperar
+
+A cada 3-5 turnos relevantes, o agente pode pausar para uma pergunta no formato:
+
+```
+✋ Pausa para sugestão:
+
+<Justificativa curta sobre por que este workflow é relevante agora>
+
+[s] Sim, acionar <Workflow>
+[n] Não, seguir adiante
+[m] Mostrar quando faria sentido
+```
+
+A opção `[m]` retorna o critério aplicado (quais sinais o agente detectou) antes de você decidir.
+
+### Workflows mais comumente sugeridos
+
+| Workflow | Disparo típico |
+|---|---|
+| [review](08-orquestracao/tipos-de-trabalho/review.md) | Sessão dominada por fix de bug (2+ palavras-chave de fix, commits `fix:`/`hotfix:`) |
+| [refatoracao](08-orquestracao/tipos-de-trabalho/refatoracao.md) | Duplicação de padrões em 3+ features, TODOs acumulados, mudanças repetidas no mesmo arquivo |
+| [learn-simple](08-orquestracao/tipos-de-trabalho/learn-simple.md) | Mesmo tipo de erro 2x na mesma sessão, descoberta de "ah, faltava isso" |
+| [session-handoff](08-orquestracao/tipos-de-trabalho/session-handoff.md) | Adopter sinaliza fim de sessão (`vou pausar`, `até amanhã`) sem ter acionado Handoff |
+| [cortex-spec-flow](08-orquestracao/tipos-de-trabalho/cortex-spec-flow.md) | Adopter pede ajuda pra definir feature antes de implementar, palavras de spec/produto (jornada, caso de uso, regra de negócio) |
+
+### Regras invioláveis
+
+- **Sugestão é sempre pergunta — nunca ação automática.** Adopter decide.
+- **Cooldown:** workflow recusado não é sugerido de novo por 5 turnos relevantes.
+- **Silenciador:** flag `--no-suggest` desliga todas as sugestões pela sessão atual; reativa com `--suggest` ou nova sessão.
+
+### Dentro do Cortex Spec Flow: proatividade adaptada por modo
+
+Quando a sessão está em Cortex Spec Flow, a proatividade varia conforme o modo:
+
+| Modo do Spec Flow | Proatividade | Observação |
+|---|---|---|
+| Exploração | desativada por default (`--no-suggest` automático) | Preserva natureza do modo. Reativável com `--suggest`. |
+| Guiado | ativa | Todas as heurísticas valem (Create Feature, Handoff, Review, Refactor). |
+| Conduzido | ativa | Foco em Create Feature e Handoff (transições naturais para fora do Spec Flow). |
+| Governado | ativa mas conservadora | Apenas Create Feature ao final do checklist; sem fragmentar o rigor sequencial. |
+
+A [skill-cortex-spec-flow](03-skills/skill-cortex-spec-flow.md) complementa cobrindo **transições entre modos internos** ao Spec Flow (Exploração → Guiado, Guiado → Conduzido etc.), enquanto a [skill-detectar-workflow-relevante](03-skills/skill-detectar-workflow-relevante.md) cobre **transições para outros workflows** (Create Feature, Handoff, Review, Refactor).
+
+### Diferença entre proatividade e obrigatoriedade
+
+- **Skill obrigatória** (validar-encerramento): hard-block, não tem opção de não rodar. Garante fechamento sem pendências silenciosas.
+- **Skill proativa** (detectar-workflow-relevante): pergunta opcional, adopter sempre pode recusar. Garante que workflows subutilizados sejam lembrados quando o contexto pede.
+
+As duas convivem sem conflito — uma é fechamento, outra é orientação.
+
+### Telemetria
+
+Cada sugestão é registrada em `06-logs-e-memoria/sugestoes-proativas.log` (pasta privada, não vai para o OSS). Os dados servem para revisar heurísticas — sugestões com alta taxa de recusa indicam calibração ruim e devem ser ajustadas.
+
+Esta regra implementa a Decisão 06 (registrada em `11-evolucao-do-sistema/02-decisoes/agentes-proativos-review-refactor.md`) a partir de evidência do teste-adopter-2: adopter construiu 2 projetos em 4-5 sessões sem **nunca** invocar Review nem Refactor, embora em retrospecto reconhecesse que ambos teriam sido úteis. Comportamento reativo demais — proatividade preenche essa lacuna.
 
 ---
 

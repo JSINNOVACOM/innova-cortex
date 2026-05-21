@@ -8,12 +8,15 @@ Relacionado a:
 - [04-estrutura-documental-de-projetos](../01-regras/04-estrutura-documental-de-projetos.md)
 - [agente-inicializacao-projeto](../02-agentes/agente-inicializacao-projeto.md)
 - [skill-iniciar-projeto](../03-skills/skill-iniciar-projeto.md)
+- [skill-validar-encerramento](../03-skills/skill-validar-encerramento.md)
 - [template-system-overview](template-system-overview.md)
 - [template-domain-overview](template-domain-overview.md)
 - [template-current-state-assessment](template-current-state-assessment.md)
 - [template-gaps-and-unknowns](template-gaps-and-unknowns.md)
 - [template-current-status](template-current-status.md)
 - [template-handoff](template-handoff.md)
+- [template-padrao-tecnico](template-padrao-tecnico.md)
+- [template-claude-md-local](template-claude-md-local.md)
 
 ---
 
@@ -156,6 +159,38 @@ Usar para:
 
 Cria no projeto:
 - `docs/context/handoff.md`
+
+---
+
+### 7. [template-padrao-tecnico](template-padrao-tecnico.md)
+Usar para:
+- criar um padrão técnico novo (stack, componente, quality-gate específico)
+- preservar a convenção de wikilinks limpa (sem refs fantasma a `memoria-operacional (registro interno, não publicado no OSS)`, `pendencias (registro interno, não publicado no OSS)`, `hipoteses-abertas (registro interno, não publicado no OSS)`, `fatos-confirmados (registro interno, não publicado no OSS)`)
+- ter um ponto de partida com bloco "Relacionado a" já correto e estrutura de seções uniforme
+
+Cria no `.cortex/`:
+- `10-padroes-tecnicos/stacks/<nome>.md` (ou subpasta equivalente)
+
+---
+
+## Convenção de wikilinks em padrões técnicos
+
+Padrões técnicos criados pelo adopter (em `10-padroes-tecnicos/`) **NÃO devem usar** os 4 wikilinks abaixo — pertencem à governança privada do autor original e não resolvem em instalações OSS:
+
+- `memoria-operacional (registro interno, não publicado no OSS)`
+- `pendencias (registro interno, não publicado no OSS)`
+- `hipoteses-abertas (registro interno, não publicado no OSS)`
+- `fatos-confirmados (registro interno, não publicado no OSS)`
+
+A lista oficial de wikilinks proibidos está em `03-skills/wikilinks-fantasma.txt`. A skill [skill-validar-encerramento](../03-skills/skill-validar-encerramento.md) (Check 6) alerta automaticamente se algum desses aparecer em arquivos produzidos pelo workflow.
+
+Wikilinks recomendados em padrões técnicos:
+
+- `[Claude](../Claude.md)`
+- `[00-regras-gerais](../01-regras/00-regras-gerais.md)`
+- `[03-checklist-de-qualidade](../01-regras/03-checklist-de-qualidade.md)`
+- `[quality-gate-base](../10-padroes-tecnicos/quality-gates/quality-gate-base.md)`
+- Outros padrões em `10-padroes-tecnicos/` (se aplicável)
 
 ---
 

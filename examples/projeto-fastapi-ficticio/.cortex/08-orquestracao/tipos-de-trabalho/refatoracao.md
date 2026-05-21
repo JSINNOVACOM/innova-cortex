@@ -205,19 +205,24 @@ Deve atualizar, quando aplicável:
 
 ---
 
-### Etapa 8: validação de fechamento
+### Etapa 8: validação de fechamento (OBRIGATÓRIA)
+
+**Status:** hard-required. Workflow NÃO pode ser declarado concluído sem este passo.
 
 Objetivo:
 garantir que a documentação atualizada pela refatoração não contém pendências silenciosas.
 
 Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos criados ou editados (`docs/analysis/*`, `docs/context/current-status.md`, `docs/context/handoff.md`). A skill verifica:
 
-- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
-- referências a arquivos que não existem;
-- EOF/newline final;
-- seções vazias com cabeçalho.
+- **Check 1:** placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- **Check 2:** referências a arquivos que não existem;
+- **Check 3:** EOF/newline final;
+- **Check 4:** seções vazias com cabeçalho;
+- **Check 6:** wikilinks fantasma (lista negra em `03-skills/wikilinks-fantasma.txt`).
 
-Achados devem ser corrigidos ou registrados como pendência explícita em `docs/context/current-status.md` antes do encerramento.
+(Check 5 — `.gitignore` mínimo — roda apenas em Init Project e Setup Project, não nesta etapa.)
+
+O relatório consolidado deve ser apresentado ao usuário **mesmo se zero problemas encontrados** (output mínimo obrigatório). Achados devem ser corrigidos ou registrados como pendência explícita em `docs/context/current-status.md` antes do encerramento.
 
 ---
 
@@ -230,7 +235,8 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - plano mínimo de execução ou sequência de mudança
 - critério mínimo de validação
 - clareza sobre o que foi melhorado ou o que ainda falta
-- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
+- validação de fechamento executada (Checks 1, 2, 3, 4, 6 da skill)
+- ⚠ Workflow não é considerado concluído sem relatório da skill (mesmo se vazio).
 
 Sem isso, ainda há grande chance de a refatoração ter sido apenas movimentação de código sem direção clara.
 

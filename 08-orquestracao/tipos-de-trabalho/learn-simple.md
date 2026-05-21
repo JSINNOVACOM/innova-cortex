@@ -223,19 +223,24 @@ Se não houver base suficiente para recomendação, registrar apenas o incidente
 
 ---
 
-### Etapa 7: validação de fechamento
+### Etapa 7: validação de fechamento (OBRIGATÓRIA)
+
+**Status:** hard-required. Workflow NÃO pode ser declarado concluído sem este passo.
 
 Objetivo:  
 garantir que o registro do aprendizado em `memory/learnings.md` e as referências eventuais em `docs/` não contêm pendências silenciosas.
 
 Aplicar [skill-validar-encerramento](../../03-skills/skill-validar-encerramento.md) sobre os arquivos editados pelo fluxo (`memory/learnings.md` e qualquer `docs/*` referenciado). A skill verifica:
 
-- placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
-- referências a arquivos que não existem;
-- EOF/newline final;
-- seções vazias com cabeçalho.
+- **Check 1:** placeholders pendentes (`{{...}}`, `<!-- TODO: ... -->`);
+- **Check 2:** referências a arquivos que não existem;
+- **Check 3:** EOF/newline final;
+- **Check 4:** seções vazias com cabeçalho;
+- **Check 6:** wikilinks fantasma (lista negra em `03-skills/wikilinks-fantasma.txt`).
 
-Caso o aprendizado referencie um arquivo que não foi criado (ex: linkar uma análise futura), decidir entre criar agora, remover a referência ou substituir.
+(Check 5 — `.gitignore` mínimo — roda apenas em Init Project e Setup Project, não nesta etapa.)
+
+O relatório consolidado deve ser apresentado ao usuário **mesmo se zero problemas encontrados** (output mínimo obrigatório). Caso o aprendizado referencie um arquivo que não foi criado (ex: linkar uma análise futura), decidir entre criar agora, remover a referência ou substituir.
 
 ---
 
@@ -249,7 +254,8 @@ Este fluxo só deve ser considerado minimamente concluído quando existir:
 - decisão de registro (registrar ou não, e em qual seção)
 - registro em `memory/learnings.md`, quando aplicável
 - recomendação preventiva, quando houver base para isso
-- validação de fechamento executada (placeholders, referências, EOF, seções vazias)
+- validação de fechamento executada (Checks 1, 2, 3, 4, 6 da skill)
+- ⚠ Workflow não é considerado concluído sem relatório da skill (mesmo se vazio).
 
 Sem isso, o incidente foi percebido mas não processado.
 

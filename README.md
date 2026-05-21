@@ -125,14 +125,18 @@ O Innova Cortex define workflows nomeados. O assistente consulta o documento cor
 | Review | "Use o fluxo Review" | Sem piloto ainda |
 | Handoff | "Use o fluxo Handoff" | Sem piloto ainda |
 | Learn Simple | "Use o fluxo Learn Simple" | Sem piloto ainda |
+| Cortex Spec Flow | "Use o fluxo Cortex Spec Flow" | Auto-testado (4 modos) |
 
 Significado dos status:
 
 - **Validado** — usado em pilotos reais, com resultados documentados.
 - **Em validação** — em andamento; existem sinais, mas conclusões ainda em aberto.
+- **Auto-testado** — exercitado em auto-teste interno (todos os modos/caminhos), ainda sem adopter externo.
 - **Sem piloto ainda** — definido, mas ainda não exercitado em projeto real.
 
 Os workflows sem piloto entram porque a disciplina que eles codificam ainda é útil. Trate-os como guia, não como lei.
+
+**Cortex Spec Flow** é opcional e diferente dos demais: é dedicado ao trabalho de spec/produto/análise (brainstorm, jornadas do usuário, regras de negócio, spec consumível por Create Feature). Tem 4 modos declarados no acionamento — **Exploração**, **Guiado** (default), **Conduzido**, **Governado** — do mais livre ao mais formal. Sem acionamento, o Cortex se comporta exatamente como antes.
 
 ---
 
@@ -182,6 +186,25 @@ Um segundo exemplo (Next.js) está planejado para a v0.1.1.
 ## Idioma
 
 Este README e a documentação interna estão em **português brasileiro**. O harness foi pensado primeiro para devs solo, freelancers e educadores brasileiros. Versão em inglês pode ser adicionada em release futura conforme demanda.
+
+---
+
+## Convenção de wikilinks
+
+Os arquivos do `.cortex/` usam wikilinks (`[[nome-do-no]]`) para referência cruzada entre regras, agentes, skills e workflows. Use **apenas wikilinks que resolvem dentro do `.cortex/` instalado**.
+
+Se você customizar arquivos em `10-padroes-tecnicos/` (criar `python.md`, `go.md` etc.) ou criar qualquer documento novo no `.cortex/`, evite os wikilinks abaixo — eles pertencem à governança privada do autor original e **não funcionam fora do vault dele**:
+
+| Wikilink proibido | Use em vez disso |
+|---|---|
+| `[[memoria-operacional]]` | `memory/project-context.md` |
+| `[[pendencias]]` | seção em `docs/context/current-status.md` |
+| `[[hipoteses-abertas]]` | `docs/analysis/gaps-and-unknowns.md` |
+| `[[fatos-confirmados]]` | `docs/analysis/current-state-assessment.md` |
+
+A skill `skill-validar-encerramento` (Check 6) alerta automaticamente sobre essas refs em arquivos produzidos por qualquer workflow — então o caminho é "se o aviso aparecer, substituir conforme a tabela acima".
+
+Se algum desses refs aparecer em arquivo do `.cortex/` instalado (em vez de em algo customizado por você), é resíduo de versão antiga — abra issue no repo.
 
 ---
 
