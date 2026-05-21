@@ -38,11 +38,10 @@ cd ~/projetos/meu-projeto
 
 ```bash
 mkdir -p .cortex
-cp -r /tmp/cortex/* .cortex/
-rm -rf .cortex/examples   # exemplo didático: referência no repo, não precisa no projeto
+cp -r /tmp/cortex/cortex/* .cortex/
 ```
 
-O `examples/` existe no repositório apenas como referência de layout — removê-lo do `.cortex/` instalado mantém a governança enxuta. (O CLI planejado fará isso automaticamente.)
+O repositório traz a governança em `cortex/` e os materiais auxiliares (`examples/`, `README.md`, `LICENSE`) na raiz. O comando acima copia **só** a governança para o `.cortex/` do seu projeto — `examples/` fica de fora.
 
 ### 4. Crie o `CLAUDE.md` local a partir do template
 
