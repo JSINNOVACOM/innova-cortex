@@ -1,7 +1,7 @@
 # Skill: Validar encerramento
 
 ## Objetivo
-Verificar, ao final de um workflow que produz documentação, que o material entregue não contém pendências silenciosas — placeholders não substituídos, referências a arquivos que não existem, fechamentos parciais, `.gitignore` mínimo ausente, wikilinks fantasma — antes de declarar o workflow concluído.
+Verificar, ao final de um workflow que produz documentação, que o material entregue não contém pendências silenciosas — placeholders não substituídos, referências a arquivos que não existem, fechamentos parciais, `.gitignore` mínimo ausente, wikilinks fantasma, marcadores de conflito de merge — antes de declarar o workflow concluído.
 
 Esta skill é **OBRIGATÓRIA** nos 7 workflows listados em "Quando usar". Pular esta skill é considerado **quebra de protocolo do harness**, equivalente a executar sem mostrar plano. Ver `Claude.md` central, seção "Skills obrigatórias por workflow".
 
@@ -55,6 +55,7 @@ Identificar nos arquivos produzidos toda menção a outro arquivo, nos seguintes
 - `ver: <path>` (variações de capitalização)
 - Links markdown `[texto](path)` onde `path` é caminho local (não `http://` nem `https://`).
 - Wikilinks no formato Obsidian (`[ [arquivo] ]` sem os espaços) — no contexto do adopter raramente existem, mas se aparecerem, validar.
+- Caminhos de arquivo em `inline code` (entre crases) que aparentem path local — contêm `/` e extensão (ex: `docs/specs/<nome>/visao.md`). Cobre as cross-refs internas do Cortex Spec Flow, em que `assinatura.md` aponta para `visao.md`/`casos-de-uso.md` etc. por caminho em crase. (Em modo Governado/Guiado/Conduzido o Check 7 já valida a existência dos artefatos nomeados; este reconhecimento estende a cobertura aos demais caminhos em crase e ao modo Exploração.)
 
 Para cada referência, verificar se o arquivo existe no caminho indicado, relativo à raiz do projeto do adopter. Se não existir, é uma referência pendurada.
 
@@ -147,6 +148,21 @@ Este check **não é hard-block** sobre o conteúdo de `assinatura.md` em si —
 
 A skill auxiliar [skill-cortex-spec-flow](skill-cortex-spec-flow.md) apoia este check enriquecendo o relatório com sugestões específicas por modo, mas o Check 7 fica nesta skill (mantém hard-block na obrigatoriedade — Decisão 05).
 
+### 8. Marcadores de conflito de merge (TODOS os workflows e modos — hard-block)
+
+Procedimento (varredura com **co-ocorrência**, não linha-a-linha independente):
+
+1. Gatilhos primários: varrer os arquivos produzidos/editados pelo workflow procurando, no início de linha, os marcadores de **abertura** e **fechamento** — que não colidem com sintaxe Markdown:
+   - `<<<<<<<` (abertura — ex: `<<<<<<< HEAD`, `<<<<<<< Updated upstream`);
+   - `>>>>>>>` (fechamento — ex: `>>>>>>> Stashed changes`).
+2. Separador: `=======` (no início de linha) só conta como marcador de conflito quando aparece **dentro de um bloco aberto** — isto é, depois de um `<<<<<<<` ainda sem o `>>>>>>>` correspondente. Um `=======` **isolado** (sem abertura aberta antes) **não** é marcador de conflito: é o sublinhado Setext de um título H1, sintaxe Markdown válida (`Título` seguido de uma linha de `=`). Tratá-lo como hard-block travaria o encerramento de um doc correto (falso-positivo — fricção F-B1 do auto-teste 2026-06-05).
+3. Cada bloco de conflito detectado (abertura/fechamento, mais o separador interno quando houver) é **hard-block** sobre o conteúdo: o workflow **não pode** ser declarado concluído enquanto houver marcador. Diferente dos demais checks de conteúdo (que admitem pendência aceita), conflito de merge gravado num doc deixa o estado vivo **ambíguo** — não há "aceitar e seguir".
+4. No relatório, listar arquivo + linha de cada marcador.
+
+Justificativa (evidência G1): no `dash-noticias-ia-front`, um `git stash pop` malsucedido gravou blocos `<<<<<<<`/`=======`/`>>>>>>>` dentro de `docs/context/current-status.md` e `handoff.md` — justamente os documentos lidos primeiro numa retomada. A skill rodou no projeto, mas nenhum dos Checks 1–7 detectava o padrão. O estado vivo ficou literalmente ambíguo (v0.4.0 vs v0.5.0; porta 8000 vs 8081).
+
+**Diferente de todos os outros checks, o Check 8 roda em todos os 8 workflows e em todos os modos do Cortex Spec Flow** — inclusive Exploração. Um marcador de conflito é corrupção real, não ritual de fechamento: deve aparecer mesmo no relatório silencioso de Exploração quando encontrado. Custo é 1 regex; retorno é alto; modo de falha é comprovado.
+
 ---
 
 ## Matriz de checks por modo do Cortex Spec Flow
@@ -162,15 +178,17 @@ Quando o workflow invocador for [cortex-spec-flow](../08-orquestracao/tipos-de-t
 | 5. `.gitignore` mínimo | não | não | não | não |
 | 6. Wikilinks fantasma | não | sim | sim | sim |
 | **7. Fluxo encerrado** | sim (destino simples) | sim | sim | sim (checklist completo) |
+| **8. Marcadores de conflito** | sim | sim | sim | sim |
 
 Notas operacionais:
 
 - **Check 5 pulado em todos os modos do Spec Flow** — workflow não cria estrutura de projeto novo (`.gitignore` mínimo só vale para Init/Setup Project).
 - **Modo Exploração silencioso** — Checks 1 e 3 rodam, mas o relatório dos checks aparece só se houver problema real. Preserva natureza do modo (captura livre, sem ritual de fechamento). **Exceção:** a confirmação do Check 7 (destino declarado) é sempre exibida (1 linha), mesmo com os demais checks silenciados.
+- **Check 8 roda mesmo em Exploração** — é o único check de conteúdo que aparece no relatório silencioso quando encontra algo: marcador de conflito é corrupção real, não ritual de fechamento. Limpo, fica silencioso como os demais.
 - **Checks "não"** — não executam no modo (não consomem ciclo). Mantém Exploração leve, sem fricção desnecessária.
-- **Hard-block sobre execução da skill (Decisão 05) continua valendo** — adopter pode recusar conteúdo de check específico, mas não pode pular a skill inteira. Em modo Exploração, a skill ainda roda — apenas os checks aplicáveis são silenciados.
+- **Hard-block sobre execução da skill (Decisão 05) continua valendo** — adopter pode recusar conteúdo de check específico, mas não pode pular a skill inteira. Em modo Exploração, a skill ainda roda — apenas os checks aplicáveis são silenciados. **Check 8 é hard-block também sobre conteúdo** — marcador de conflito não admite "aceitar e seguir".
 
-Para os outros 7 workflows (Init Project, Setup Project, Create Feature, Refactor, Review, Handoff, Learn Simple), a matriz original continua valendo (Init/Setup rodam Checks 1-6; outros rodam Checks 1, 2, 3, 4, 6).
+Para os outros 7 workflows (Init Project, Setup Project, Create Feature, Refactor, Review, Handoff, Learn Simple), a matriz original continua valendo, **acrescida do Check 8 em todos** (Init/Setup rodam Checks 1-6 + 8; outros rodam Checks 1, 2, 3, 4, 6 + 8).
 
 ---
 
@@ -180,9 +198,10 @@ Para os outros 7 workflows (Init Project, Setup Project, Create Feature, Refacto
 O workflow passa para a skill a lista dos arquivos criados ou editados durante a execução. A skill opera sobre essa lista, não sobre o projeto inteiro.
 
 ### 2. Aplicar os checks aplicáveis
-- Workflows Init Project e Setup Project: rodar os 6 checks (1, 2, 3, 4, 5, 6).
-- Workflows Create Feature, Refactor, Review, Handoff, Learn Simple: rodar 5 checks (1, 2, 3, 4, 6).
-- Workflow Cortex Spec Flow: aplicar a matriz de checks por modo (ver seção "Matriz de checks por modo do Cortex Spec Flow" acima). Check 7 sempre roda; Checks 1-6 conforme matriz.
+- Workflows Init Project e Setup Project: rodar 7 checks (1, 2, 3, 4, 5, 6, 8).
+- Workflows Create Feature, Refactor, Review, Handoff, Learn Simple: rodar 6 checks (1, 2, 3, 4, 6, 8).
+- Workflow Cortex Spec Flow: aplicar a matriz de checks por modo (ver seção "Matriz de checks por modo do Cortex Spec Flow" acima). Checks 7 e 8 sempre rodam; Checks 1-6 conforme matriz.
+- **Check 8 (marcadores de conflito) roda em todos os workflows e modos, sem exceção.**
 
 ### 3. Consolidar achados
 Agrupar achados por tipo. Exemplo:
@@ -212,6 +231,10 @@ Seções vazias:
 
 Wikilinks fantasma:
   - .cortex/10-padroes-tecnicos/stacks/python.md:12 → memoria-operacional (registro interno, não publicado no OSS) (sugerido: memory/project-context.md)
+
+Marcadores de conflito de merge (hard-block):
+  - docs/context/current-status.md:14 → <<<<<<< Updated upstream
+  - docs/context/current-status.md:21 → >>>>>>> Stashed changes
 ```
 
 ### 4. Exibir output mínimo obrigatório (sempre visível, mesmo se zero problemas)
@@ -228,6 +251,7 @@ A skill SEMPRE produz output visual ao final, independente de ter achados. Isso 
 ✅ EOF/newline: ok
 ✅ Seções vazias: 0
 ✅ Wikilinks fantasma: 0
+✅ Marcadores de conflito: 0
 
 Workflow <nome> pode ser concluído.
 ```
@@ -243,6 +267,7 @@ Workflow <nome> pode ser concluído.
 ✅ Seções vazias: 0
 ✅ .gitignore mínimo: 10/10 entradas presentes
 ✅ Wikilinks fantasma: 0
+✅ Marcadores de conflito: 0
 
 Workflow <nome> pode ser concluído.
 ```
@@ -258,10 +283,12 @@ Workflow <nome> pode ser concluído.
 ⚠ Seções vazias: 1 (ver detalhes)
 ❌ .gitignore mínimo: 4 entradas faltantes (ver detalhes)
 ✅ Wikilinks fantasma: 0
+❌ Marcadores de conflito: 2 (hard-block — ver detalhes)
 
 <bloco de detalhes>
 
 Workflow <nome> NÃO pode ser declarado concluído até resolução das pendências marcadas com ❌, ou aceitação explícita registrada em docs/context/current-status.md.
+Marcadores de conflito (Check 8) NÃO admitem aceitação — devem ser resolvidos antes do encerramento.
 ```
 
 **Formato modo Exploração do Cortex Spec Flow (checks aplicáveis limpos):**
@@ -286,8 +313,9 @@ Para cada categoria com achados, perguntar:
 - **Seções vazias:** "Preencher agora, remover seção, ou seguir como pendência?"
 - **`.gitignore` mínimo:** "Adicionar as entradas faltantes? [s/N]" (apenas Init/Setup).
 - **Wikilinks fantasma:** "Substituir automaticamente conforme sugestões? [s/N]"
+- **Marcadores de conflito:** "Resolver o conflito agora?" — **não há opção de aceitar como pendência** (hard-block sobre conteúdo). O agente mostra os blocos e pede a resolução manual antes de prosseguir.
 
-Pendências aceitas são registradas em `docs/context/current-status.md` do projeto do adopter, com data e descrição.
+Pendências aceitas são registradas em `docs/context/current-status.md` do projeto do adopter, com data e descrição. **Marcadores de conflito não entram nessa via** — devem ser resolvidos, não registrados como pendência.
 
 ### 6. Declarar conclusão
 Após o relatório ser mostrado e os achados terem sido tratados (resolvidos ou registrados como pendência aceita), o agente pode declarar o workflow concluído. Antes disso, **não**.
@@ -298,7 +326,7 @@ Após o relatório ser mostrado e os achados terem sido tratados (resolvidos ou 
 
 Ao final da skill deve existir:
 
-- relatório consolidado visível ao adopter, com seção de cada um dos 6 (ou 5) checks;
+- relatório consolidado visível ao adopter, com seção de cada check aplicável (7 em Init/Setup, 6 nos demais, mais Check 7 no Spec Flow — Check 8 sempre presente);
 - decisão do usuário registrada para cada achado (corrigir ou pendência);
 - pendências aceitas registradas em `docs/context/current-status.md`;
 - workflow pode declarar encerramento.
@@ -317,6 +345,7 @@ Esta skill verifica apenas fechamento mecânico:
 - `.gitignore` cobre o mínimo? (Init/Setup)
 - wikilink fantasma? (conforme matriz por modo no Spec Flow; sempre nos outros 7 workflows)
 - fluxo encerrado com destino declarado? (somente Cortex Spec Flow)
+- marcador de conflito de merge presente? (todos os workflows e modos — hard-block)
 
 Esta skill **não opera sobre o projeto inteiro**, apenas sobre os arquivos produzidos ou editados pelo workflow que a invocou. Operação ampla é fora do escopo.
 
@@ -367,6 +396,7 @@ Todos os agentes que conduzem workflows que produzem documentação:
 - adopter não descobre fricção tipo "esqueci de substituir {{...}}" depois;
 - `.gitignore` mínimo é aplicado em todo projeto inicializado;
 - wikilinks fantasma não vazam para arquivos customizados pelo adopter;
+- marcador de conflito de merge não sobrevive a um encerramento — estado vivo nunca fica ambíguo;
 - relatório visual sempre aparece, mesmo com zero problemas — adopter vê que a etapa rodou.
 
 ---
@@ -396,8 +426,12 @@ Em 2026-05-20, recebeu uma quarta expansão a partir da frente 11 (definição c
 
 - **Decisão 10 (frente 14)** — adiciona Check 7 (fluxo encerrado com destino declarado) somente no [cortex-spec-flow](../08-orquestracao/tipos-de-trabalho/cortex-spec-flow.md) + matriz de checks por modo do Spec Flow (Exploração / Guiado / Conduzido / Governado). Hard-block sobre execução da skill (D05) continua valendo em todos os modos, com Exploração silenciado quando checks aplicáveis estão limpos.
 
+Em 2026-06-05, recebeu uma quinta expansão a partir da Decisão 11 (frente 16 — protocolo de encerramento robusto, registrada em `11-evolucao-do-sistema/02-decisoes/protocolo-encerramento-robusto.md`):
+
+- **Decisão 11 (frente 16)** — adiciona Check 8 (marcadores de conflito de merge), hard-block sobre conteúdo, rodando em **todos os 8 workflows e todos os modos do Spec Flow** (inclusive Exploração). Cobre o nível 1 do protocolo de encerramento (lacuna G1 da evidência de uso real em 3 projetos).
+
 ---
 
 ## Regra final
 O papel desta skill é simples:
-**garantir que workflows que produzem documentação não fechem com pendências silenciosas — placeholders, referências penduradas, fechamentos parciais, `.gitignore` ausente, wikilinks fantasma.** Sempre obrigatória, sempre com relatório visível.
+**garantir que workflows que produzem documentação não fechem com pendências silenciosas — placeholders, referências penduradas, fechamentos parciais, `.gitignore` ausente, wikilinks fantasma, marcadores de conflito de merge.** Sempre obrigatória, sempre com relatório visível.

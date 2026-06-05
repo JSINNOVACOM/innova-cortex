@@ -329,6 +329,27 @@ Esta regra implementa a Decisão 06 (registrada em `11-evolucao-do-sistema/02-de
 
 ---
 
+## Protocolo de encerramento de unidade de trabalho (3 níveis)
+
+Toda unidade de trabalho (uma feature, uma frente/Decisão, uma sessão) fecha em **3 níveis**. O Cortex cobre os três de forma diferente:
+
+| Nível | O que fecha | Mecanismo | Natureza |
+|---|---|---|---|
+| **1. Conteúdo** | Arquivos sem pendência silenciosa (placeholder, ref pendurada, seção vazia, `.gitignore`, wikilink fantasma, **marcador de conflito de merge**) | [skill-validar-encerramento](03-skills/skill-validar-encerramento.md) (Checks 1–8) | **Hard-block** — Decisão 05 |
+| **2. Continuidade** | Estado registrado e **internamente coerente** para retomada cega (`current-status.md` + `handoff.md`) | [session-handoff](08-orquestracao/tipos-de-trabalho/session-handoff.md) (com verificação de coerência interna) | Obrigatório quando há sessão a encerrar |
+| **3. Contexto** | Limpar a janela / trocar de sessão (`/clear`) | Sugestão proativa via [skill-detectar-workflow-relevante](03-skills/skill-detectar-workflow-relevante.md) | **Sempre sugestão, nunca hard-block** |
+
+Regras do protocolo:
+
+- **Nível 1 — Check 8 (marcadores de conflito de merge)** roda em todos os workflows e modos, hard-block sobre conteúdo: um conflito gravado em doc vivo deixa o estado ambíguo e não admite "aceitar e seguir".
+- **Nível 3 é sempre sugestão.** O Cortex **nunca executa** `/clear` — é ação do harness/adopter. A sugestão de clean **só aparece após o Handoff concluído** (clean sem continuidade = perda de contexto); sem Handoff, sugere Handoff primeiro. Junto, uma sugestão opcional de **re-sync da fundação** (`memory/project-context.md`, `docs/analysis/`) quando ela parece ter derivado. Ambas obedecem `--no-suggest` e cooldown (Decisão 06).
+- **Gatilho dos níveis 2→3:** só conclusão de **unidade grande** (feature completa, fim de frente/Decisão, fim de sessão sinalizado). Nunca micro-workflow.
+- **Escopo dual:** vale para projetos do adopter (`docs/context/`) e para a evolução da governança (a pasta 11 usa `current-status.md` + `handoff-*.md` como equivalente do Handoff).
+
+Esta regra implementa a Decisão 11 (registrada em `11-evolucao-do-sistema/02-decisoes/protocolo-encerramento-robusto.md`) a partir de lastro empírico de uso real em 3 projetos: conflito de merge gravado em docs de continuidade (G1), handoff internamente inconsistente (G2), memória/fundação fossilizada (G3) e troca de máquina sem protocolo de contexto (G4).
+
+---
+
 Este documento não substitui os documentos específicos de tipo de trabalho. Os documentos em `08-orquestracao/tipos-de-trabalho/` são a fonte de verdade operacional para cada fluxo.
 
 ---

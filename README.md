@@ -6,7 +6,7 @@ Innova Cortex é um harness leve que transforma o Claude (e assistentes de códi
 
 **Não é** uma biblioteca de prompts, nem um gerador de scaffold, nem um framework de agentes. É a camada de disciplina operacional que fica entre você e o assistente.
 
-> **Status:** v0.2.0. O harness é utilizável hoje; alguns workflows são validados em pilotos, outros são experimentais. Veja [Workflows](#workflows) abaixo para o status de cada um.
+> **Status:** v0.3.0. O harness é utilizável hoje; alguns workflows são validados em pilotos, outros são experimentais. Veja [Workflows](#workflows) abaixo para o status de cada um.
 
 ---
 
@@ -171,6 +171,7 @@ Os workflows sem piloto entram porque a disciplina que eles codificam ainda é �
 | v0.1 | Governança, agentes, workflows e templates publicados | Publicado |
 | v0.1.1 | Skill `skill-validar-encerramento` + validação de encerramento (Decisões 03/04) | Publicado |
 | v0.2.0 | Cortex Spec Flow (4 modos) + skill de encerramento obrigatória + agentes proativos | Publicado |
+| v0.3.0 | Protocolo de encerramento robusto em 3 níveis (Decisão 11): Check 8 (marcadores de conflito de merge), coerência interna do handoff, sugestões de clean/re-sync da fundação | Publicado |
 | Próximo exemplo | Segundo projeto-exemplo (Next.js) | Planejado |
 | CLI `innova-cortex` | `npx innova-cortex init` automatiza os passos 1-5 do Quickstart | Planejado |
 | Futuro | Mais padrões técnicos, workflows validados, padrões opinativos | A definir |

@@ -93,6 +93,8 @@ Objetivo do fluxo: <síntese curta do propósito>
 
 Se modo foi declarado pelo adopter, a skill confirma o modo declarado e prossegue sem oferecer troca.
 
+Se o modo foi **sugerido pela skill** (via heurística de detecção de modo) e o adopter **aceitou** a sugestão, a skill emite o bloco de declaração padrão (`Fluxo acionado / Modo / Documento consultado / Objetivo`) com o modo escolhido. O aceite da sugestão equivale a declaração explícita do adopter — não há terceiro formato de saída.
+
 ### Durante a sessão (sugestão de transição)
 
 ```
@@ -280,7 +282,7 @@ No encerramento, a [skill-validar-encerramento](skill-validar-encerramento.md) r
 - **valida coerência entre modo e destino:**
   - modo Exploração com destino "Create Feature" → alerta de inconsistência (sem visão + casos, Create Feature não tem input limpo);
   - modo Governado com destino "Pausa" sem checklist completo → alerta de inconsistência;
-  - modo Conduzido com `assinatura.md` sem aprovação registrada → alerta de fluxo não confirmado.
+  - modo Conduzido sem aprovação registrada → alerta de fluxo não confirmado. A aprovação dos blocos vive em `context.md` (Etapas 2 e 3 do workflow); a `assinatura.md` apenas a referencia. O check considera o fluxo confirmado se houver registro de aprovação em **qualquer um dos dois** (`context.md` ou `assinatura.md`) — não exige que esteja na `assinatura.md`.
 
 - **sugere texto de `assinatura.md`** quando adopter pede ajuda no formato.
 

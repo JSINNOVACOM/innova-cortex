@@ -41,6 +41,7 @@ A skill avalia o contexto recente e, se algum workflow for relevante e estiver f
 
 **O que esta skill NÃO faz:**
 - executar workflows automaticamente (sempre pergunta primeiro)
+- **executar `/clear`** — a sugestão de clean (nível 3) é só recomendação; limpar a janela é ação do harness/adopter, nunca da skill
 - substituir invocação nominal do adopter (workflows continuam acionáveis por comando direto)
 - duplicar a responsabilidade da [skill-validar-encerramento](skill-validar-encerramento.md) (que é obrigatória/hard-block; esta é proativa/opcional)
 - emitir sugestões a cada turno (frequência é regulada — ver abaixo)
@@ -98,6 +99,16 @@ A skill retorna uma das três respostas:
 
 Cada heurística tem critério explícito. Default é conservador — só dispara quando o sinal é claro. Lista evolutiva: novas heurísticas podem ser adicionadas neste arquivo sem nova Decisão.
 
+### Conceito compartilhado — "unidade grande concluída"
+
+Duas heurísticas do protocolo de encerramento (clean nível 3 e re-sync da fundação) dependem de detectar que uma **unidade grande** foi concluída. Os 3 sinais:
+
+- **(projeto)** um [create-feature](../08-orquestracao/tipos-de-trabalho/create-feature.md) foi encerrado com [skill-validar-encerramento](skill-validar-encerramento.md) limpa;
+- **(pasta 11 / governança)** fim de uma frente ou Decisão registrado (`current-status.md` + `handoff-*.md` marcando o fechamento);
+- **(sessão)** fim de sessão sinalizado pelo adopter (`vou pausar`, `até amanhã`, `vou dormir`).
+
+**Nunca dispara em micro-workflow** (um Learn Simple curto, uma edição isolada). Gatilho só em conclusão de unidade grande — evita ruído (parâmetro da Decisão 11).
+
 ### Para propor [review](../08-orquestracao/tipos-de-trabalho/review.md)
 
 Dispara se **qualquer uma** das condições for verdadeira:
@@ -143,6 +154,52 @@ Estes workflows tipicamente são acionados pelo adopter de forma nominal. A skil
 **Exceção atual — Handoff:**
 
 - Se o adopter sinalizar fim de sessão (`vou pausar`, `até amanhã`, `vou dormir`, `salva o estado`) sem ter acionado Handoff explicitamente, sugerir [session-handoff](../08-orquestracao/tipos-de-trabalho/session-handoff.md) na hora.
+
+### Para sugerir `/clear` (nível 3 — limpar contexto)
+
+Esta é a sugestão do **nível 3** do protocolo de encerramento (Decisão 11). O Cortex **nunca executa** `/clear` — é ação do harness/adopter; a skill apenas **recomenda**.
+
+Dispara quando:
+
+- uma **unidade grande foi concluída** (ver "Conceito compartilhado" acima); **E**
+- o **Handoff já foi concluído** nesta sessão. "Concluído" aqui significa o workflow [session-handoff](../08-orquestracao/tipos-de-trabalho/session-handoff.md) executado até a Saída mínima aceitável — **incluindo a verificação de coerência interna (nível 2)** — não apenas o arquivo `handoff.md` editado à mão. Editar o arquivo sem rodar o fluxo não satisfaz o gate, porque pula a checagem de coerência (fricção F-B3 do auto-teste 2026-06-05).
+
+**Gate duro (encadeamento clean ↔ Handoff):** a sugestão de clean **só aparece após Handoff concluído**. Se a unidade grande fechou mas **não** houve Handoff, a skill **sugere Handoff primeiro** — clean nunca é sugerido "nu", porque limpar a janela sem continuidade registrada = perda de contexto.
+
+**Texto-modelo:**
+
+```
+✋ Contexto registrado em handoff. Unidade "<X>" concluída.
+   Quer limpar a janela e abrir uma sessão nova?
+
+   [s] Sim, limpar (rode /clear)
+   [n] Não, seguir nesta sessão
+   [m] Mostrar critério detectado
+```
+
+A opção `[s]` **não executa** `/clear` — apenas confirma a recomendação; o adopter roda `/clear` (ação do harness). O `[m]` mostra qual sinal de "unidade grande" foi detectado.
+
+### Para sugerir re-sync da fundação (cobre G3)
+
+Dispara quando uma **unidade grande foi concluída** (ver "Conceito compartilhado") **e** a camada de memória/fundação parece ter derivado do estado real:
+
+- `memory/project-context.md`, `docs/analysis/current-state-assessment.md` ou `docs/analysis/gaps-and-unknowns.md` não foram tocados desde a última feature/frente, enquanto `current-status.md` seguiu sendo atualizado (sinal conservador de frescor — fundação fossilizada).
+
+**Robustez do sinal (F-B4 do auto-teste 2026-06-05):** o frescor por mtime/git é fraco logo após clone/cópia (que iguala mtimes) — justamente o momento de troca de máquina da evidência G4. Quando não houver histórico git confiável, complementar com um **sinal de conteúdo**: versão/porta/paths citados em `current-status.md` que estão ausentes (ou divergentes) em `project-context.md`/`as-is`. Opcional — a heurística é conservadora por design (falso-negativo é o modo de falha aceito).
+
+**Texto-modelo:**
+
+```
+✋ A camada de memória/fundação pode ter derivado do estado real
+   (project-context / current-state-assessment não tocados desde
+   a última unidade). Quer re-sincronizar a fundação antes de fechar?
+
+   [s] Sim, revisar memory/ e as-is
+   [n] Não, seguir
+   [m] Mostrar o que parece desatualizado
+```
+
+**Não é hard-block** — re-sync é julgamento do adopter. Forçar geraria falso positivo (nem toda unidade exige tocar `project-context`) e viraria ritual vazio, exatamente o risco que a Decisão 05 alertou. Por isso G3 é sugestão proativa, não check da [skill-validar-encerramento](skill-validar-encerramento.md).
 
 ### Para propor [cortex-spec-flow](../08-orquestracao/tipos-de-trabalho/cortex-spec-flow.md)
 
@@ -323,6 +380,12 @@ Em 2026-05-20, recebeu expansão da Decisão 10 (frente 14 — Cortex Spec Flow)
 - heurística nova para sugerir [cortex-spec-flow](../08-orquestracao/tipos-de-trabalho/cortex-spec-flow.md) quando contexto pede;
 - heurísticas de transição dentro do Spec Flow (saída para Create Feature, Handoff, Review, Refactor) adaptadas por modo (Exploração / Guiado / Conduzido / Governado);
 - proatividade desativada por default em modo Exploração (preserva natureza do modo).
+
+Em 2026-06-05, recebeu expansão da Decisão 11 (frente 16 — protocolo de encerramento robusto, registrada em `11-evolucao-do-sistema/02-decisoes/protocolo-encerramento-robusto.md`):
+
+- heurística de **sugestão de `/clear`** (nível 3 do protocolo) — gated por Handoff concluído, cobre G4;
+- heurística de **re-sync da fundação** (cobre G3) — sugestão proativa, não check bloqueante;
+- ambas disparadas por "unidade grande concluída", ambas sob `--no-suggest`/cooldown.
 
 ---
 
