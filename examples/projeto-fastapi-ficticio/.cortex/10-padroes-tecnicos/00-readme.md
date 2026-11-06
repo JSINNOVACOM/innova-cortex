@@ -225,6 +225,11 @@ Pergunta:
 - stack: `java-spring`
 - componente: `backend-api`
 
+### Caso: aplicação web em Next.js
+
+- stack: `nextjs`
+- componente: `frontend-web`
+
 ### Caso: frontend em React com API em Python
 
 - stack do front: `react-typescript`
