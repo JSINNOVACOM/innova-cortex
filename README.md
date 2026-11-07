@@ -6,7 +6,7 @@ Innova Cortex é um harness leve que transforma o Claude (e assistentes de códi
 
 **Não é** uma biblioteca de prompts, nem um gerador de scaffold, nem um framework de agentes. É a camada de disciplina operacional que fica entre você e o assistente.
 
-> **Status:** v0.3.1. O harness é utilizável hoje; alguns workflows são validados em pilotos, outros são experimentais. Veja [Workflows](#workflows) abaixo para o status de cada um.
+> **Status:** v0.4.0. O harness é utilizável hoje; alguns workflows são validados em pilotos, outros são experimentais. Veja [Workflows](#workflows) abaixo para o status de cada um.
 
 ---
 
@@ -33,7 +33,7 @@ npx innova-cortex init --name "meu-projeto" --objective "objetivo em uma linha"
 
 O [CLI `innova-cortex`](https://github.com/JSINNOVACOM/innova-cortex-cli) ([npm](https://www.npmjs.com/package/innova-cortex)) automatiza os passos 1-5 da instalação manual: copia só a governança para `.cortex/`, cria o `CLAUDE.md` local já preenchido, monta `docs/` e `memory/` e grava `.cortex/VERSION` com a versão instalada.
 
-- Use `--ref <tag>` para fixar uma release (ex.: `--ref v0.3.1`).
+- Use `--ref <tag>` para fixar uma release (ex.: `--ref v0.4.0`).
 - Sem `--name`/`--objective`, o `CLAUDE.md` fica com placeholders marcados com `<!-- TODO -->`.
 - Requer Node `>= 20` e `git` no `PATH`.
 - Não rode `npm install innova-cortex`: o pacote é uma CLI de instalação, não uma dependência do projeto.
@@ -208,6 +208,7 @@ Projetos sem interface não são afetados.
 | v0.2.0 | Cortex Spec Flow (4 modos) + skill de encerramento obrigatória + agentes proativos | Publicado |
 | v0.3.0 | Protocolo de encerramento robusto em 3 níveis (Decisão 11): Check 8 (marcadores de conflito de merge), coerência interna do handoff, sugestões de clean/re-sync da fundação | Publicado |
 | v0.3.1 | Novos padrões técnicos de stack: `python` (reescrita para APIs de larga escala) e `nextjs` (App Router, TypeScript) | Publicado |
+| v0.4.0 | Trilho de interface: telas nascem da fundação visual (skill, `quality-gate-interface`, templates de fundação e de plano, ganchos em 6 workflows, `docs/design/`); Check 5 aceita `docs/*` e `memory/*` | Publicado |
 | Próximo exemplo | Segundo projeto-exemplo (Next.js) | Planejado |
 | CLI `innova-cortex` | `npx innova-cortex init` automatiza os passos 1-5 do Quickstart ([innova-cortex-cli](https://github.com/JSINNOVACOM/innova-cortex-cli)) | Publicado (npm `0.2.1`) |
 | Futuro | Mais padrões técnicos, workflows validados, padrões opinativos | A definir |
