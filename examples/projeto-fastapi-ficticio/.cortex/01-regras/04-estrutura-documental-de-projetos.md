@@ -20,6 +20,8 @@ Relacionado a:
 - [skill-iniciar-projeto](../03-skills/skill-iniciar-projeto.md)
 - [skill-mapear-contexto](../03-skills/skill-mapear-contexto.md)
 - [skill-revisar-documento](../03-skills/skill-revisar-documento.md)
+- [skill-trilho-de-interface](../03-skills/skill-trilho-de-interface.md)
+- [template-fundacao-visual](../04-templates/template-fundacao-visual.md)
 
 ---
 
@@ -329,7 +331,33 @@ docs/
   specs/
   decisions/
   integrations/
+  design/
 ```
+
+### Fundação visual (`docs/design/`)
+
+Projetos com interface mantêm a fundação visual em `docs/design/`. Projetos sem interface não criam esta pasta.
+
+```text
+docs/
+  design/
+    design-system.md        ← direção aprovada, sistema, padrões de layout, critérios de medida
+    plano-de-interface.md   ← só quando há modernização de telas existentes
+    direcao/                ← maquete da direção aprovada pelo dono
+    telas/                  ← maquetes de tela aprovadas
+    referencia/             ← capturas de referência para medida
+```
+
+- `design-system.md` nasce do [template-fundacao-visual](../04-templates/template-fundacao-visual.md).
+- `plano-de-interface.md` nasce do [template-plano-de-interface](../04-templates/template-plano-de-interface.md).
+- Tokens e componentes vivem no código do projeto; `docs/design/` registra decisões e referências.
+- O `PRODUCT.md` gerado pelo Impeccable é derivado de `docs/business/domain-overview.md`; em conflito sobre domínio, vale o `domain-overview.md`.
+
+A pasta é criada no momento A da [skill-trilho-de-interface](../03-skills/skill-trilho-de-interface.md), antes da primeira tela.
+
+Como `docs/` fica fora do Git por padrão (ver "Proteção mínima com `.gitignore`"), recomenda-se versionar `docs/design/`: a direção aprovada e as maquetes são contrato para todos que criam telas no projeto. A decisão continua sendo do projeto.
+
+Atenção: com a entrada `docs/`, o Git ignora a pasta inteira e não reabre subpastas por regra negativa. Para versionar `docs/design/`, trocar `docs/` por `docs/*` e acrescentar `!docs/design/`.
 
 ### Regra de crescimento
 

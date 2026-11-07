@@ -17,6 +17,7 @@ Definir padrões técnicos de arquitetura, implementação e qualidade para sist
 - [00-regras-gerais](../../01-regras/00-regras-gerais.md)
 - [03-checklist-de-qualidade](../../01-regras/03-checklist-de-qualidade.md)
 - [quality-gate-base](../quality-gates/quality-gate-base.md)
+- [quality-gate-interface](../quality-gates/quality-gate-interface.md)
 
 ---
 

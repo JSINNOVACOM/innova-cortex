@@ -125,9 +125,10 @@ meu-projeto/
 │   ├── as-is/
 │   ├── business/
 │   ├── analysis/
-│   └── context/
-│       ├── current-status.md
-│       └── handoff.md
+│   ├── context/
+│   │   ├── current-status.md
+│   │   └── handoff.md
+│   └── design/               ← só em projeto com interface (fundação visual)
 └── memory/
     └── project-context.md
 ```
@@ -162,14 +163,26 @@ Os workflows sem piloto entram porque a disciplina que eles codificam ainda é �
 
 **Cortex Spec Flow** é opcional e diferente dos demais: é dedicado ao trabalho de spec/produto/análise (brainstorm, jornadas do usuário, regras de negócio, spec consumível por Create Feature). Tem 4 modos declarados no acionamento — **Exploração**, **Guiado** (default), **Conduzido**, **Governado** — do mais livre ao mais formal. Sem acionamento, o Cortex se comporta exatamente como antes.
 
+### Trilho de interface
+
+Projetos com interface seguem um trilho transversal para que **toda tela nasça coerente** com a direção visual aprovada pelo dono, com layout que faça sentido dentro do sistema do projeto. Não é um workflow novo: é a skill `03-skills/skill-trilho-de-interface.md`, acionada por Setup Project, Create Feature, Cortex Spec Flow, Review e Refactor quando a fatia cria ou muda uma tela.
+
+- **Fundação visual** (uma vez, antes da primeira tela): brief do produto, direção aprovada em maquete, tokens, componentes e padrões de layout, registrados em `docs/design/`.
+- **Nascimento de tela** (toda fatia com tela): a tela parte da fundação, tem maquete aprovada antes do código e é medida depois.
+- **Modernização** (telas existentes sem fundação): plano em etapas, a partir de `04-templates/template-plano-de-interface.md`.
+
+O trilho usa cinco ferramentas de terceiros, gratuitas, instaladas no projeto (o Cortex referencia, não empacota): Vercel `web-design-guidelines`, Taste `design-taste-frontend`, UI UX Pro Max, Impeccable e Playwright `playwright-cli`. Os critérios de medida (contraste AA, alvos de 44 px, sem rolagem lateral em 360/390/768/1440 px, claro e escuro) estão em `10-padroes-tecnicos/quality-gates/quality-gate-interface.md`.
+
+Projetos sem interface não são afetados.
+
 ---
 
 ## O que está incluído
 
 - `01-regras/` — regras gerais, limites de atuação, checklist de qualidade, estrutura documental do projeto
 - `02-agentes/` — definições de agentes (inicialização, arquiteto, analista, planejador)
-- `03-skills/` — skills focadas (iniciar projeto, mapear contexto, revisar documento)
-- `04-templates/` — templates mínimos para os 6 documentos iniciais + o `CLAUDE.md` local
+- `03-skills/` — skills focadas (iniciar projeto, mapear contexto, revisar documento, trilho de interface)
+- `04-templates/` — templates mínimos para os 6 documentos iniciais + o `CLAUDE.md` local + fundação visual e plano de interface
 - `08-orquestracao/` — definições de workflows, roteamento, handoffs, critérios de entrada/saída
 - `10-padroes-tecnicos/` — padrões técnicos opinativos (stacks, componentes, arquitetura, quality gates)
 
