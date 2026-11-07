@@ -291,7 +291,23 @@ A pasta `docs/` fica fora do Git por padrão **porque pode conter regras de neg�
 
 A pasta `memory/` fica fora do Git por padrão **porque registra estado vivo de sessões e pode conter contexto pessoal/operacional**.
 
-Se algum documento específico precisar ser versionado, isso deve ser decisão explícita do projeto — adicionar regra negativa no `.gitignore` (ex.: `!docs/business/domain-overview.md`) ou mover o arquivo para fora dessas pastas.
+Se algum documento específico precisar ser versionado, isso deve ser decisão explícita do projeto — adicionar regra negativa no `.gitignore` ou mover o arquivo para fora dessas pastas.
+
+Com a entrada `docs/`, o Git ignora a pasta inteira e não aplica regras negativas dentro dela. Para versionar parte da pasta, trocar `docs/` por `docs/*` (vale o mesmo para `memory/`):
+
+```text
+# uma subpasta inteira
+docs/*
+!docs/design/
+
+# um arquivo dentro de subpasta: reabrir a subpasta e ignorar o resto dela
+docs/*
+!docs/business/
+docs/business/*
+!docs/business/domain-overview.md
+```
+
+A skill de encerramento aceita `docs/` ou `docs/*` como entrada presente.
 
 Outros itens devem ser adicionados conforme stack, build, cache, ambiente local e dependências.
 
@@ -357,7 +373,7 @@ A pasta é criada no momento A da [skill-trilho-de-interface](../03-skills/skill
 
 Como `docs/` fica fora do Git por padrão (ver "Proteção mínima com `.gitignore`"), recomenda-se versionar `docs/design/`: a direção aprovada e as maquetes são contrato para todos que criam telas no projeto. A decisão continua sendo do projeto.
 
-Atenção: com a entrada `docs/`, o Git ignora a pasta inteira e não reabre subpastas por regra negativa. Para versionar `docs/design/`, trocar `docs/` por `docs/*` e acrescentar `!docs/design/`.
+Para versionar `docs/design/`, trocar `docs/` por `docs/*` e acrescentar `!docs/design/` (ver "Proteção mínima com `.gitignore`").
 
 ### Regra de crescimento
 
