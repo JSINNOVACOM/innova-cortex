@@ -6,7 +6,7 @@ Innova Cortex é um harness leve que transforma o Claude (e assistentes de códi
 
 **Não é** uma biblioteca de prompts, nem um gerador de scaffold, nem um framework de agentes. É a camada de disciplina operacional que fica entre você e o assistente.
 
-> **Status:** v0.3.0. O harness é utilizável hoje; alguns workflows são validados em pilotos, outros são experimentais. Veja [Workflows](#workflows) abaixo para o status de cada um.
+> **Status:** v0.3.1. O harness é utilizável hoje; alguns workflows são validados em pilotos, outros são experimentais. Veja [Workflows](#workflows) abaixo para o status de cada um.
 
 ---
 
@@ -22,19 +22,41 @@ Resultado: menos deriva, menos re-explicação, mais continuidade entre sessões
 
 O Innova Cortex é instalado **por projeto** usando o **modelo `.cortex/`**: a governança é copiada para uma pasta dentro do seu projeto e referenciada via path relativo. Isso mantém o projeto portável, versionável e compatível com CI/CD.
 
-### 1. Clone o Innova Cortex em um local temporário
+### Via CLI (recomendado)
+
+Dentro do seu projeto, rode:
+
+```bash
+cd ~/projetos/meu-projeto
+npx innova-cortex init --name "meu-projeto" --objective "objetivo em uma linha"
+```
+
+O [CLI `innova-cortex`](https://github.com/JSINNOVACOM/innova-cortex-cli) ([npm](https://www.npmjs.com/package/innova-cortex)) automatiza os passos 1-5 da instalação manual: copia só a governança para `.cortex/`, cria o `CLAUDE.md` local já preenchido, monta `docs/` e `memory/` e grava `.cortex/VERSION` com a versão instalada.
+
+- Use `--ref <tag>` para fixar uma release (ex.: `--ref v0.3.1`).
+- Sem `--name`/`--objective`, o `CLAUDE.md` fica com placeholders marcados com `<!-- TODO -->`.
+- Requer Node `>= 20` e `git` no `PATH`.
+- Não rode `npm install innova-cortex`: o pacote é uma CLI de instalação, não uma dependência do projeto.
+
+Depois, siga para [Inicie o Claude](#inicie-o-claude).
+
+### Instalação manual
+
+Se preferir não usar o CLI, siga os passos abaixo.
+
+#### 1. Clone o Innova Cortex em um local temporário
 
 ```bash
 git clone https://github.com/<seu-usuario>/innova-cortex /tmp/cortex
 ```
 
-### 2. Vá até o seu projeto
+#### 2. Vá até o seu projeto
 
 ```bash
 cd ~/projetos/meu-projeto
 ```
 
-### 3. Copie a governança para `.cortex/`
+#### 3. Copie a governança para `.cortex/`
 
 ```bash
 mkdir -p .cortex
@@ -43,7 +65,7 @@ cp -r /tmp/cortex/cortex/* .cortex/
 
 O repositório traz a governança em `cortex/` e os materiais auxiliares (`examples/`, `README.md`, `LICENSE`) na raiz. O comando acima copia **só** a governança para o `.cortex/` do seu projeto — `examples/` fica de fora.
 
-### 4. Crie o `CLAUDE.md` local a partir do template
+#### 4. Crie o `CLAUDE.md` local a partir do template
 
 ```bash
 cp .cortex/04-templates/template-claude-md-local.md ./CLAUDE.md
@@ -55,7 +77,7 @@ Abra o `CLAUDE.md` e preencha os placeholders:
 - `{{PROJECT_OBJECTIVE}}` → objetivo em uma linha
 - `{{CENTRAL_CLAUDE_MD_PATH}}` → `./.cortex/Claude.md`
 
-### 5. Crie a estrutura mínima do projeto
+#### 5. Crie a estrutura mínima do projeto
 
 ```bash
 mkdir -p docs/context memory
@@ -70,7 +92,7 @@ Você também pode criar os documentos iniciais recomendados a partir dos templa
 - `docs/context/current-status.md`
 - `docs/context/handoff.md`
 
-### 6. Inicie o Claude
+### Inicie o Claude
 
 ```bash
 claude
@@ -158,7 +180,7 @@ Os workflows sem piloto entram porque a disciplina que eles codificam ainda é �
 ## O que **não** é
 
 - **Não é biblioteca de prompts.** Não há templates de prompt aqui. O harness molda como o assistente *opera*, não o que digitar para ele.
-- **Não é gerador de scaffold.** Não cria código de aplicação. O CLI para isso está no roadmap (ver abaixo).
+- **Não é gerador de scaffold.** Não cria código de aplicação. O CLI `innova-cortex` apenas instala o `.cortex/` no seu projeto.
 - **Não é framework de agentes.** Os agentes em `02-agentes/` são definições de papel para o Claude assumir, não runners autônomos.
 - **Não é específico de framework.** O layout do projeto é opinativo; a stack tecnológica não é.
 
@@ -172,11 +194,12 @@ Os workflows sem piloto entram porque a disciplina que eles codificam ainda é �
 | v0.1.1 | Skill `skill-validar-encerramento` + validação de encerramento (Decisões 03/04) | Publicado |
 | v0.2.0 | Cortex Spec Flow (4 modos) + skill de encerramento obrigatória + agentes proativos | Publicado |
 | v0.3.0 | Protocolo de encerramento robusto em 3 níveis (Decisão 11): Check 8 (marcadores de conflito de merge), coerência interna do handoff, sugestões de clean/re-sync da fundação | Publicado |
+| v0.3.1 | Novos padrões técnicos de stack: `python` (reescrita para APIs de larga escala) e `nextjs` (App Router, TypeScript) | Publicado |
 | Próximo exemplo | Segundo projeto-exemplo (Next.js) | Planejado |
-| CLI `innova-cortex` | `npx innova-cortex init` automatiza os passos 1-5 do Quickstart | Planejado |
+| CLI `innova-cortex` | `npx innova-cortex init` automatiza os passos 1-5 do Quickstart ([innova-cortex-cli](https://github.com/JSINNOVACOM/innova-cortex-cli)) | Publicado (npm `0.2.1`) |
 | Futuro | Mais padrões técnicos, workflows validados, padrões opinativos | A definir |
 
-Enquanto o CLI não chega, o fluxo manual do Quickstart acima é o caminho suportado.
+O CLI é o caminho recomendado de instalação; o fluxo manual do Quickstart continua suportado.
 
 ---
 
